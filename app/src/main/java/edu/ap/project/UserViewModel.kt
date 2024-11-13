@@ -41,4 +41,29 @@ class UserViewModel : ViewModel() {
             _userData.value = null
         }
     }
+
+    // Functie om gebruikersprofiel te updaten (behalve wachtwoord)
+    fun updateUserProfile(updatedUser: User) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+                .update(
+                    "username", updatedUser.username,
+                    "email", updatedUser.email,
+                    "profileImageUrl", updatedUser.profileImageUrl,
+                    "location", updatedUser.location,
+                    "createdAt", updatedUser.createdAt
+                )
+                .addOnSuccessListener {
+                    // Bijwerken succesvol, haal de gegevens opnieuw op
+                    fetchUserData()
+                }
+                .addOnFailureListener {
+                    // Fout afhandelen (bijv. loggen)
+                }
+        }
+    }
 }
