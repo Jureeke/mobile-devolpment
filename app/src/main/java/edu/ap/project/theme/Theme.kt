@@ -1,4 +1,4 @@
-package edu.ap.project.ui.theme
+package edu.ap.project.theme
 
 import android.app.Activity
 import android.os.Build

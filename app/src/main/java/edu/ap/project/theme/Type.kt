@@ -1,4 +1,4 @@
-package edu.ap.project.ui.theme
+package edu.ap.project.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "651457326901",
+    "project_id": "renting-app-e1321",
+    "storage_bucket": "renting-app-e1321.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651457326901:android:01a4514b35232f150f267c",
+        "android_client_info": {
+          "package_name": "edu.ap.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5Z6N3j_X8cy6fuIJ78Fl2oL4vZdA5PCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
