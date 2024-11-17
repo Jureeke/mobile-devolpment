@@ -1,12 +1,16 @@
 package edu.ap.project
 
+import UserViewModel
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,9 +19,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import coil.compose.rememberAsyncImagePainter
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.firestore.GeoPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import androidx.lifecycle.viewmodel.compose.viewModel as viewModel
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import edu.ap.project.model.User
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +46,7 @@ class ProfileActivity : ComponentActivity() {
 @Composable
 fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
     val user by userViewModel.userData.collectAsState()
+    val context = LocalContext.current // Get context here
 
     // Controleer of de gegevens van de gebruiker beschikbaar zijn
     if (user == null) {
@@ -60,9 +76,10 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                 .padding(top = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             // Profielfoto
             Image(
-                painter = rememberAsyncImagePainter(newImageUrl),
+                painter = rememberAsyncImagePainter(imageUrl),
                 contentDescription = "Profielfoto",
                 modifier = Modifier
                     .size(120.dp)
@@ -100,28 +117,45 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // Input voor een nieuwe profielfoto URL
-            TextField(
-                value = newImageUrl,
-                onValueChange = { newImageUrl = it },
-                label = { Text("Nieuwe Profielfoto URL") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth().padding(bottom = 8.dp)
+                    .verticalScroll(rememberScrollState()) // Add vertical scroll
+                    .heightIn(min = 56.dp, max = 100.dp)
+            ) {
+                TextField(
+                    value = newImageUrl,
+                    onValueChange = { newImageUrl = it },
+                    label = { Text("Nieuwe Profielfoto URL") },
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Knop om de gegevens bij te werken
             Button(
                 onClick = {
-                    // Maak een nieuw User object met de bijgewerkte gegevens
-                    val updatedUser = User(
-                        uid = user?.uid ?: "",
-                        email = newEmail,
-                        username = newUsername,
-                        profileImageUrl = newImageUrl,
-                        location = newLocation,
-                        createdAt = user?.createdAt ?: System.currentTimeMillis()
-                    )
-                    userViewModel.updateUserProfile(updatedUser)
+                    // Use a coroutine to call the suspend function and get coordinates
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val coordinates = getCoordinatesFromLocation(newLocation, context)
+                        if (coordinates != null) {
+                            val (latitude, longitude) = coordinates
+
+                            // Log the coordinates
+                            val updatedUser = User(
+                                uid = user?.uid ?: "",
+                                email = newEmail,
+                                username = newUsername,
+                                profileImageUrl = newImageUrl,
+                                location = newLocation,
+                                locationCoordinates = GeoPoint(latitude, longitude), // Set the coordinates
+                                createdAt = user?.createdAt ?: System.currentTimeMillis()
+                            )
+                            userViewModel.updateUserProfile(updatedUser)
+                        } else {
+                            Toast.makeText(context, "Locatie niet gevonden", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 },
                 modifier = Modifier.padding(top = 16.dp)
             ) {
@@ -136,3 +170,46 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
 fun ProfileScreenPreview() {
     ProfileScreen()
 }
+
+suspend fun getCoordinatesFromLocation(locationName: String, context: android.content.Context): Pair<Double, Double>? {
+    return withContext(Dispatchers.IO) {
+        val client = OkHttpClient()
+        val url = "https://nominatim.openstreetmap.org/search?q=$locationName&format=json&addressdetails=1&lang=nl"
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        try {
+            val response = client.newCall(request).execute()
+
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                responseBody?.let {
+                    try {
+                        val jsonResponse = JSONArray(it)
+                        if (jsonResponse.length() > 0) {
+                            val result = jsonResponse.getJSONObject(0)
+                            val lat = result.getDouble("lat")
+                            val lon = result.getDouble("lon")
+
+                            // Return the coordinates as a Pair
+                            return@withContext Pair(lat, lon)
+                        } else {
+                            Log.e("UserViewModel", "Geen Locatie Meegegeven")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("UserViewModel", "Error parsing response: ${e.message}")
+                    }
+                }
+            } else {
+                Log.e("UserViewModel", "API request failed with code: ${response.code}")
+            }
+        } catch (e: Exception) {
+            Log.e("UserViewModel", "Error fetching location: ${e.message}")
+        }
+        // Return null if no coordinates found or an error occurred
+        return@withContext null
+    }
+}
+
+

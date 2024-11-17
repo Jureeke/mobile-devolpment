@@ -1,5 +1,6 @@
 package edu.ap.project
 
+import UserViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,12 +16,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import edu.ap.project.screens.AddScreen
+import edu.ap.project.screens.HomeScreen
+import edu.ap.project.screens.ListScreen
+import edu.ap.project.screens.MapScreen
 import edu.ap.project.theme.ProjectTheme
 
 class MainActivity : ComponentActivity() {
@@ -121,50 +125,6 @@ fun BottomNavigationBar(navController: NavHostController) {
                 }
             }
         )
-    }
-}
-
-@Composable
-fun HomeScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text("Home")
-        }
-}
-
-@Composable
-fun AddScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text("Toevoegen")
-    }
-}
-
-@Composable
-fun ListScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text("Lijst overzicht")
-    }
-}
-
-@Composable
-fun MapScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text("Map overzicht")
     }
 }
 

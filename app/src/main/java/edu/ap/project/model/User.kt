@@ -1,4 +1,6 @@
-package edu.ap.project
+package edu.ap.project.model
+
+import com.google.firebase.firestore.GeoPoint
 
 data class User(
     val uid: String = "", // Firebase Auth UID
@@ -6,7 +8,9 @@ data class User(
     val username: String = "",
     val profileImageUrl: String? = null,
     val location: String? = null,
+    val locationCoordinates: GeoPoint?,
+
     val createdAt: Long = System.currentTimeMillis()
 ) {
-    constructor() : this("", "", "", null, null)
+    constructor() : this("", "", "", null, null, GeoPoint(0.0, 0.0))
 }

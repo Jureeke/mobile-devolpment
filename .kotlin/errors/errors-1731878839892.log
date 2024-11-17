@@ -1,0 +1,789 @@
+kotlin version: 2.0.0
+error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
+File being compiled: D:/AP Hogeschool/24-25/Mobile Development/mobile-devolpment/app/src/main/java/edu/ap/project/screens/ListScreen.kt
+The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:65)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:52)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:38)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:29)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:16)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:62)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.invokeCodegen(JvmIrCodegenFactory.kt:371)
+	at org.jetbrains.kotlin.codegen.CodegenFactory.generateModule(CodegenFactory.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.generateModuleInFrontendIRMode(JvmIrCodegenFactory.kt:433)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.generateCodeFromIr(jvmCompilerPipeline.kt:241)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:140)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:155)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:50)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:104)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:48)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:453)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:62)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally$lambda$9$compile(IncrementalCompilerRunner.kt:249)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:267)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:676)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1661)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:ItemBox visibility:public modality:FINAL <> (item:edu.ap.project.model.Item, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+  annotations:
+    Composable
+    ComposableTarget(applier = "androidx.compose.ui.UiComposable")
+  VALUE_PARAMETER name:item index:0 type:edu.ap.project.model.Item
+  VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+  VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+  BLOCK_BODY
+    BLOCK type=kotlin.Unit origin=null
+      SET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Unit origin=null
+        CALL 'public abstract fun startRestartGroup (key: kotlin.Int): androidx.compose.runtime.Composer declared in androidx.compose.runtime.Composer' type=androidx.compose.runtime.Composer origin=null
+          $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+          key: CONST Int type=kotlin.Int value=1472428524
+      CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+        composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+        sourceInformation: CONST String type=kotlin.String value="C(ItemBox)31@1179L11,27@1042L1694:ListScreen.kt#8v29t7"
+    VAR name:$dirty type:kotlin.Int [val]
+      GET_VAR '$changed: kotlin.Int declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Int origin=null
+    WHEN type=kotlin.Unit origin=IF
+      BRANCH
+        if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+          arg0: CALL 'public final fun and (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+            $this: GET_VAR '$changed: kotlin.Int declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Int origin=null
+            other: CONST Int type=kotlin.Int value=14
+          arg1: CONST Int type=kotlin.Int value=0
+        then: SET_VAR 'val $dirty: kotlin.Int [val] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Unit origin=null
+          CALL 'public final fun or (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+            $this: GET_VAR 'val $dirty: kotlin.Int [val] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Int origin=null
+            other: WHEN type=kotlin.Int origin=IF
+              BRANCH
+                if: CALL 'public abstract fun changed (value: kotlin.Any?): kotlin.Boolean declared in androidx.compose.runtime.Composer' type=kotlin.Boolean origin=null
+                  $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+                  value: GET_VAR 'item: edu.ap.project.model.Item declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=edu.ap.project.model.Item origin=null
+                then: CONST Int type=kotlin.Int value=4
+              BRANCH
+                if: CONST Boolean type=kotlin.Boolean value=true
+                then: CONST Int type=kotlin.Int value=2
+    WHEN type=kotlin.Unit origin=IF
+      BRANCH
+        if: CALL 'public final fun OROR (arg0: kotlin.Boolean, arg1: kotlin.Boolean): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+          arg0: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=null
+            $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+              arg0: CALL 'public final fun and (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+                $this: GET_VAR 'val $dirty: kotlin.Int [val] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Int origin=null
+                other: CONST Int type=kotlin.Int value=11
+              arg1: CONST Int type=kotlin.Int value=2
+          arg1: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=null
+            $this: CALL 'public abstract fun <get-skipping> (): kotlin.Boolean declared in androidx.compose.runtime.Composer' type=kotlin.Boolean origin=null
+              $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+        then: BLOCK type=kotlin.Unit origin=null
+          CALL 'public final fun Box (modifier: androidx.compose.ui.Modifier?, contentAlignment: androidx.compose.ui.Alignment?, propagateMinConstraints: kotlin.Boolean, content: @[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.BoxScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit [inline] declared in androidx.compose.foundation.layout.BoxKt' type=kotlin.Unit origin=null
+            modifier: CALL 'public final fun padding-3ABfNKs (all: androidx.compose.ui.unit.Dp): androidx.compose.ui.Modifier declared in androidx.compose.foundation.layout.PaddingKt' type=androidx.compose.ui.Modifier origin=null
+              $receiver: CALL 'public final fun background-bw27NRU (color: androidx.compose.ui.graphics.Color, shape: androidx.compose.ui.graphics.Shape): androidx.compose.ui.Modifier declared in androidx.compose.foundation.BackgroundKt' type=androidx.compose.ui.Modifier origin=null
+                $receiver: CALL 'public final fun padding-VpY3zN4$default (horizontal: androidx.compose.ui.unit.Dp, vertical: androidx.compose.ui.unit.Dp, $mask0: kotlin.Int, $handler: kotlin.Any?): androidx.compose.ui.Modifier declared in androidx.compose.foundation.layout.PaddingKt' type=androidx.compose.ui.Modifier origin=DEFAULT_DISPATCH_CALL
+                  $receiver: CALL 'public final fun fillMaxWidth$default (fraction: kotlin.Float, $mask0: kotlin.Int, $handler: kotlin.Any?): androidx.compose.ui.Modifier declared in androidx.compose.foundation.layout.SizeKt' type=androidx.compose.ui.Modifier origin=DEFAULT_DISPATCH_CALL
+                    $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.compose.ui.Modifier.Companion visibility:public [final,static]' type=androidx.compose.ui.Modifier.Companion origin=null
+                    fraction: COMPOSITE type=kotlin.Float origin=DEFAULT_VALUE
+                      CONST Float type=kotlin.Float value=0.0
+                    $mask0: CONST Int type=kotlin.Int value=1
+                    $handler: CONST Null type=kotlin.Any? value=null
+                  horizontal: COMPOSITE type=androidx.compose.ui.unit.Dp origin=DEFAULT_VALUE
+                    CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.compose.ui.unit.Dp origin=null
+                      <T>: kotlin.Float
+                      <R>: androidx.compose.ui.unit.Dp
+                      v: CONST Float type=kotlin.Float value=0.0
+                  vertical: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                    $receiver: CONST Int type=kotlin.Int value=8
+                  $mask0: CONST Int type=kotlin.Int value=1
+                  $handler: CONST Null type=kotlin.Any? value=null
+                color: CALL 'public final fun getSurface-0d7_KjU (): androidx.compose.ui.graphics.Color declared in androidx.compose.material3.ColorScheme' type=androidx.compose.ui.graphics.Color origin=GET_PROPERTY
+                  $this: CALL 'public final fun <get-colorScheme> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.compose.material3.ColorScheme declared in androidx.compose.material3.MaterialTheme' type=androidx.compose.material3.ColorScheme origin=GET_PROPERTY
+                    $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.compose.material3.MaterialTheme visibility:public [final,static]' type=androidx.compose.material3.MaterialTheme origin=null
+                    $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+                    $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static]' type=kotlin.Int origin=null
+                shape: CALL 'public final fun RoundedCornerShape-0680j_4 (size: androidx.compose.ui.unit.Dp): androidx.compose.foundation.shape.RoundedCornerShape declared in androidx.compose.foundation.shape.RoundedCornerShapeKt' type=androidx.compose.foundation.shape.RoundedCornerShape origin=null
+                  size: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                    $receiver: CONST Int type=kotlin.Int value=8
+              all: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                $receiver: CONST Int type=kotlin.Int value=16
+            contentAlignment: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+              CONST Null type=kotlin.Nothing? value=null
+            propagateMinConstraints: COMPOSITE type=kotlin.Boolean origin=DEFAULT_VALUE
+              CONST Boolean type=kotlin.Boolean value=false
+            content: BLOCK type=@[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.BoxScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> origin=LAMBDA
+              COMPOSITE type=kotlin.Unit origin=null
+              FUNCTION_REFERENCE 'private final fun ItemBox$lambda$2 ($item: edu.ap.project.model.Item, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): kotlin.Unit declared in edu.ap.project.screens.ListScreenKt' type=@[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.BoxScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> origin=INLINE_LAMBDA reflectionTarget=null
+                $item: GET_VAR 'item: edu.ap.project.model.Item declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=edu.ap.project.model.Item origin=null
+            $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+            $changed: CONST Int type=kotlin.Int value=0
+            $default: CONST Int type=kotlin.Int value=6
+      BRANCH
+        if: CONST Boolean type=kotlin.Boolean value=true
+        then: CALL 'public abstract fun skipToGroupEnd (): kotlin.Unit declared in androidx.compose.runtime.Composer' type=kotlin.Unit origin=null
+          $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+    BLOCK type=kotlin.Unit origin=null
+      BLOCK type=kotlin.Unit origin=FOLDED_SAFE_CALL
+        WHEN type=kotlin.Unit origin=FOLDED_SAFE_CALL
+          BRANCH
+            if: COMPOSITE type=kotlin.Boolean origin=null
+              VAR IR_TEMPORARY_VARIABLE name:tmp0_safe_receiver type:androidx.compose.runtime.ScopeUpdateScope? [val]
+                CALL 'public abstract fun endRestartGroup (): androidx.compose.runtime.ScopeUpdateScope? declared in androidx.compose.runtime.Composer' type=androidx.compose.runtime.ScopeUpdateScope? origin=null
+                  $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.Composer? origin=null
+              CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=null
+                $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+                  arg0: GET_VAR 'val tmp0_safe_receiver: androidx.compose.runtime.ScopeUpdateScope? [val] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.ScopeUpdateScope? origin=null
+                  arg1: CONST Null type=kotlin.Nothing? value=null
+            then: CALL 'public abstract fun updateScope (block: kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>): kotlin.Unit declared in androidx.compose.runtime.ScopeUpdateScope' type=kotlin.Unit origin=null
+              $this: GET_VAR 'val tmp0_safe_receiver: androidx.compose.runtime.ScopeUpdateScope? [val] declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=androidx.compose.runtime.ScopeUpdateScope? origin=null
+              block: BLOCK type=kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> origin=LAMBDA
+                COMPOSITE type=kotlin.Unit origin=null
+                CALL 'public final fun <jvm-indy> <T> (dynamicCall: T of kotlin.jvm.internal.<jvm-indy>, bootstrapMethodHandle: kotlin.Any, vararg bootstrapMethodArguments: kotlin.Any): T of kotlin.jvm.internal.<jvm-indy> declared in kotlin.jvm.internal' type=kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> origin=null
+                  <T>: kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit>
+                  dynamicCall: CALL 'public final fun invoke (p0: edu.ap.project.model.Item, p1: kotlin.Int): kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> declared in kotlin.jvm.internal.invokeDynamic' type=kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> origin=null
+                    p0: GET_VAR 'item: edu.ap.project.model.Item declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=edu.ap.project.model.Item origin=null
+                    p1: GET_VAR '$changed: kotlin.Int declared in edu.ap.project.screens.ListScreenKt.ItemBox' type=kotlin.Int origin=null
+                  bootstrapMethodHandle: CALL 'public final fun <jvm-method-handle> (tag: kotlin.Int, owner: kotlin.String, name: kotlin.String, descriptor: kotlin.String, isInterface: kotlin.Boolean): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+                    tag: CONST Int type=kotlin.Int value=6
+                    owner: CONST String type=kotlin.String value="java/lang/invoke/LambdaMetafactory"
+                    name: CONST String type=kotlin.String value="metafactory"
+                    descriptor: CONST String type=kotlin.String value="(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"
+                    isInterface: CONST Boolean type=kotlin.Boolean value=false
+                  bootstrapMethodArguments: VARARG type=kotlin.Array<kotlin.Any> varargElementType=kotlin.Any
+                    CALL 'public final fun <jvm-original-method-type> (method: kotlin.Any): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+                      method: RAW_FUNCTION_REFERENCE 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 [operator] declared in kotlin.Function2' type=kotlin.Any
+                    RAW_FUNCTION_REFERENCE 'private final fun ItemBox$lambda$3 ($item: edu.ap.project.model.Item, $$changed: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $force: kotlin.Int): kotlin.Unit? declared in edu.ap.project.screens.ListScreenKt' type=kotlin.Any
+                    CALL 'public final fun <jvm-original-method-type> (method: kotlin.Any): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+                      method: RAW_FUNCTION_REFERENCE 'public abstract fun invoke (p1: androidx.compose.runtime.Composer?, p2: kotlin.Int?): kotlin.Unit? [fake_override,operator] declared in kotlin.jvm.internal.invokeDynamic.<fake>' type=kotlin.Any
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: CONST Null type=kotlin.Any? value=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:42)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:385)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:402)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:169)
+	at org.jetbrains.kotlin.backend.jvm.FileCodegen.lower(JvmPhases.kt:41)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt.makeIrFilePhase$lambda$5(PhaseBuilders.kt:114)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt$createSimpleNamedCompilerPhase$1.phaseBody(PhaseBuilders.kt:71)
+	at org.jetbrains.kotlin.backend.common.phaser.SimpleNamedCompilerPhase.phaseBody(CompilerPhase.kt:226)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:62)
+	... 44 more
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN INLINE_LAMBDA name:ItemBox$lambda$2 visibility:private modality:FINAL <> ($receiver:androidx.compose.foundation.layout.BoxScope, $item:edu.ap.project.model.Item, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+  annotations:
+    Composable
+    ComposableTarget(applier = "androidx.compose.ui.UiComposable")
+  $receiver: VALUE_PARAMETER name:$this$Box type:androidx.compose.foundation.layout.BoxScope
+  VALUE_PARAMETER BOUND_VALUE_PARAMETER name:$item index:0 type:edu.ap.project.model.Item
+  VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+  VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+  BLOCK_BODY
+    VAR name:$i$a$-Box-ListScreenKt$ItemBox$1 type:kotlin.Int [val]
+      CONST Int type=kotlin.Int value=0
+    BLOCK type=kotlin.Unit origin=null
+      CALL 'public final fun sourceInformationMarkerStart (composer: androidx.compose.runtime.Composer, key: kotlin.Int, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+        composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox$lambda$2' type=androidx.compose.runtime.Composer? origin=null
+        key: CONST Int type=kotlin.Int value=1240721795
+        sourceInformation: CONST String type=kotlin.String value="C34@1278L1452:ListScreen.kt#8v29t7"
+      COMPOSITE type=kotlin.Unit origin=null
+        CALL 'public final fun Column (modifier: androidx.compose.ui.Modifier?, verticalArrangement: androidx.compose.foundation.layout.Arrangement.Vertical?, horizontalAlignment: androidx.compose.ui.Alignment.Horizontal?, content: @[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit [inline] declared in androidx.compose.foundation.layout.ColumnKt' type=kotlin.Unit origin=null
+          modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+            CONST Null type=kotlin.Nothing? value=null
+          verticalArrangement: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+            CONST Null type=kotlin.Nothing? value=null
+          horizontalAlignment: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+            CONST Null type=kotlin.Nothing? value=null
+          content: BLOCK type=@[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> origin=LAMBDA
+            COMPOSITE type=kotlin.Unit origin=null
+            FUNCTION_REFERENCE 'private final fun ItemBox$lambda$2$lambda$1 ($item: edu.ap.project.model.Item, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): kotlin.Unit declared in edu.ap.project.screens.ListScreenKt' type=@[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> origin=INLINE_LAMBDA reflectionTarget=null
+              $item: GET_VAR '$item: edu.ap.project.model.Item declared in edu.ap.project.screens.ListScreenKt.ItemBox$lambda$2' type=edu.ap.project.model.Item origin=null
+          $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox$lambda$2' type=androidx.compose.runtime.Composer? origin=null
+          $changed: CONST Int type=kotlin.Int value=0
+          $default: CONST Int type=kotlin.Int value=7
+      CALL 'public final fun sourceInformationMarkerEnd (composer: androidx.compose.runtime.Composer): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+        composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in edu.ap.project.screens.ListScreenKt.ItemBox$lambda$2' type=androidx.compose.runtime.Composer? origin=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrSourceCompilerForInline.generateLambdaBody(IrSourceCompilerForInline.kt:67)
+	at org.jetbrains.kotlin.codegen.inline.ExpressionLambda.generateLambdaBody(LambdaInfo.kt:72)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrInlineCodegen.genValueAndPut(IrInlineCodegen.kt:99)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall$handleParameter(ExpressionCodegen.kt:610)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:638)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:573)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:587)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitBlock(IrElementVisitor.kt:122)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:407)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrBlock.accept(IrBlock.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitWhen(ExpressionCodegen.kt:1095)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitWhen(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrWhen.accept(IrWhen.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:573)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:578)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:239)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:121)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:46)
+	... 54 more
+Caused by: org.jetbrains.kotlin.codegen.CompilationException: Back-end (JVM) Internal error: Couldn't inline method call: CALL 'public final fun Column (modifier: androidx.compose.ui.Modifier?, verticalArrangement: androidx.compose.foundation.layout.Arrangement.Vertical?, horizontalAlignment: androidx.compose.ui.Alignment.Horizontal?, content: @[ExtensionFunctionType] kotlin.Function3<androidx.compose.foundation.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit [inline] declared in androidx.compose.foundation.layout.ColumnKt' type=kotlin.Unit origin=null
+File is unknown
+The root cause org.jetbrains.kotlin.codegen.inline.InlineException was thrown at: org.jetbrains.kotlin.codegen.inline.MethodInliner.wrapException(MethodInliner.kt:1111)
+	at org.jetbrains.kotlin.codegen.inline.InlineCodegen.performInline(InlineCodegen.kt:60)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrInlineCodegen.genInlineCall(IrInlineCodegen.kt:162)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrInlineCallGenerator.genCall(IrInlineCallGenerator.kt:36)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:647)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:573)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:587)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitComposite(IrElementVisitor.kt:125)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitComposite(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitComposite(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrComposite.accept(IrComposite.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:573)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:587)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitBlock(IrElementVisitor.kt:122)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:407)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrBlock.accept(IrBlock.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:573)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:578)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:137)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:239)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:121)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:46)
+	... 78 more
+Caused by: org.jetbrains.kotlin.codegen.inline.InlineException: Lambda inlining edu/ap/project/screens/ListScreenKt$ItemBox$1$1: couldn't inline method call
+Cause: ItemBox$lambda$2$lambda$1 (Landroidx/compose/foundation/layout/ColumnScope;Landroidx/compose/runtime/Composer;ILedu/ap/project/model/Item;)V:
+  @Landroidx/compose/runtime/Composable;() // invisible
+  @Landroidx/compose/runtime/ComposableTarget;(applier="androidx.compose.ui.UiComposable") // invisible
+   L0
+    ICONST_0
+    ISTORE 4
+   L1
+    ALOAD 1
+    LDC -1833909800
+    LDC "C38@1399L10,36@1320L177,44@1622L10,42@1537L180,50@1842L10,48@1751L186,56@2065L10,54@1972L188,62@2282L10,60@2193L184,72@2685L10,66@2414L306:ListScreen.kt#8v29t7"
+   L2
+    LINENUMBER 37 L2
+    INVOKESTATIC androidx/compose/runtime/ComposerKt.sourceInformationMarkerStart (Landroidx/compose/runtime/Composer;ILjava/lang/String;)V
+   L3
+    LINENUMBER 38 L3
+    GETSTATIC edu/ap/project/screens/ListScreenKt$ItemBox$1$1.$$$$item : Ledu/ap/project/model/Item;
+    INVOKEVIRTUAL edu/ap/project/model/Item.getTitle ()Ljava/lang/String;
+    ASTORE 5
+   L4
+    LINENUMBER 39 L4
+    GETSTATIC androidx/compose/material3/MaterialTheme.INSTANCE : Landroidx/compose/material3/MaterialTheme;
+    ALOAD 1
+    GETSTATIC androidx/compose/material3/MaterialTheme.$stable : I
+    INVOKEVIRTUAL androidx/compose/material3/MaterialTheme.getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+    INVOKEVIRTUAL androidx/compose/material3/Typography.getHeadlineSmall ()Landroidx/compose/ui/text/TextStyle;
+    ASTORE 6
+   L5
+    LINENUMBER 40 L5
+    GETSTATIC androidx/compose/ui/Modifier.Companion : Landroidx/compose/ui/Modifier$Companion;
+    CHECKCAST androidx/compose/ui/Modifier
+    FCONST_0
+    FCONST_0
+    FCONST_0
+    BIPUSH 8
+    ISTORE 8
+   L6
+    ICONST_0
+    ISTORE 9
+   L7
+    LINENUMBER 106 L7
+    ILOAD 8
+    I2F
+    INVOKESTATIC androidx/compose/ui/unit/Dp.constructor-impl (F)F
+    GOTO L8
+   L8
+    LINENUMBER 40 L8
+    BIPUSH 7
+    ACONST_NULL
+    INVOKESTATIC androidx/compose/foundation/layout/PaddingKt.padding-qDBjuR0$default (Landroidx/compose/ui/Modifier;FFFFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+    ASTORE 7
+   L9
+    LINENUMBER 38 L9
+    ALOAD 5
+   L10
+    LINENUMBER 40 L10
+    ALOAD 7
+    LCONST_0
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ACONST_NULL
+   L11
+    LINENUMBER 39 L11
+    ALOAD 6
+    ALOAD 1
+    BIPUSH 48
+    ICONST_0
+    LDC 65532
+   L12
+    LINENUMBER 37 L12
+    INVOKESTATIC androidx/compose/material3/TextKt.Text--4IGK_g (Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILkotlin/jvm/functions/Function1;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+   L13
+    LINENUMBER 44 L13
+    GETSTATIC edu/ap/project/screens/ListScreenKt$ItemBox$1$1.$$$$item : Ledu/ap/project/model/Item;
+    INVOKEVIRTUAL edu/ap/project/model/Item.getDescription ()Ljava/lang/String;
+    ASTORE 5
+   L14
+    LINENUMBER 45 L14
+    GETSTATIC androidx/compose/material3/MaterialTheme.INSTANCE : Landroidx/compose/material3/MaterialTheme;
+    ALOAD 1
+    GETSTATIC androidx/compose/material3/MaterialTheme.$stable : I
+    INVOKEVIRTUAL androidx/compose/material3/MaterialTheme.getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+    INVOKEVIRTUAL androidx/compose/material3/Typography.getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+    ASTORE 6
+   L15
+    LINENUMBER 46 L15
+    GETSTATIC androidx/compose/ui/Modifier.Companion : Landroidx/compose/ui/Modifier$Companion;
+    CHECKCAST androidx/compose/ui/Modifier
+    FCONST_0
+    FCONST_0
+    FCONST_0
+    BIPUSH 8
+    ISTORE 8
+   L16
+    ICONST_0
+    ISTORE 9
+   L17
+    LINENUMBER 107 L17
+    ILOAD 8
+    I2F
+    INVOKESTATIC androidx/compose/ui/unit/Dp.constructor-impl (F)F
+    GOTO L18
+   L18
+    LINENUMBER 46 L18
+    BIPUSH 7
+    ACONST_NULL
+    INVOKESTATIC androidx/compose/foundation/layout/PaddingKt.padding-qDBjuR0$default (Landroidx/compose/ui/Modifier;FFFFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+    ASTORE 7
+   L19
+    LINENUMBER 44 L19
+    ALOAD 5
+   L20
+    LINENUMBER 46 L20
+    ALOAD 7
+    LCONST_0
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ACONST_NULL
+   L21
+    LINENUMBER 45 L21
+    ALOAD 6
+    ALOAD 1
+    BIPUSH 48
+    ICONST_0
+    LDC 65532
+   L22
+    LINENUMBER 43 L22
+    INVOKESTATIC androidx/compose/material3/TextKt.Text--4IGK_g (Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILkotlin/jvm/functions/Function1;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+   L23
+    LINENUMBER 50 L23
+    GETSTATIC edu/ap/project/screens/ListScreenKt$ItemBox$1$1.$$$$item : Ledu/ap/project/model/Item;
+    INVOKEVIRTUAL edu/ap/project/model/Item.getPrice ()D
+    INVOKEDYNAMIC makeConcatWithConstants(D)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "Price: \u0001"
+    ]
+    ASTORE 5
+   L24
+    LINENUMBER 51 L24
+    GETSTATIC androidx/compose/material3/MaterialTheme.INSTANCE : Landroidx/compose/material3/MaterialTheme;
+    ALOAD 1
+    GETSTATIC androidx/compose/material3/MaterialTheme.$stable : I
+    INVOKEVIRTUAL androidx/compose/material3/MaterialTheme.getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+    INVOKEVIRTUAL androidx/compose/material3/Typography.getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+    ASTORE 6
+   L25
+    LINENUMBER 52 L25
+    GETSTATIC androidx/compose/ui/Modifier.Companion : Landroidx/compose/ui/Modifier$Companion;
+    CHECKCAST androidx/compose/ui/Modifier
+    FCONST_0
+    FCONST_0
+    FCONST_0
+    BIPUSH 8
+    ISTORE 8
+   L26
+    ICONST_0
+    ISTORE 9
+   L27
+    LINENUMBER 108 L27
+    ILOAD 8
+    I2F
+    INVOKESTATIC androidx/compose/ui/unit/Dp.constructor-impl (F)F
+    GOTO L28
+   L28
+    LINENUMBER 52 L28
+    BIPUSH 7
+    ACONST_NULL
+    INVOKESTATIC androidx/compose/foundation/layout/PaddingKt.padding-qDBjuR0$default (Landroidx/compose/ui/Modifier;FFFFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+    ASTORE 7
+   L29
+    LINENUMBER 50 L29
+    ALOAD 5
+   L30
+    LINENUMBER 52 L30
+    ALOAD 7
+    LCONST_0
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ACONST_NULL
+   L31
+    LINENUMBER 51 L31
+    ALOAD 6
+    ALOAD 1
+    BIPUSH 48
+    ICONST_0
+    LDC 65532
+   L32
+    LINENUMBER 49 L32
+    INVOKESTATIC androidx/compose/material3/TextKt.Text--4IGK_g (Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILkotlin/jvm/functions/Function1;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+   L33
+    LINENUMBER 56 L33
+    GETSTATIC edu/ap/project/screens/ListScreenKt$ItemBox$1$1.$$$$item : Ledu/ap/project/model/Item;
+    INVOKEVIRTUAL edu/ap/project/model/Item.getRenter ()Ljava/lang/String;
+    INVOKEDYNAMIC makeConcatWithConstants(Ljava/lang/String;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "Renter: \u0001"
+    ]
+    ASTORE 5
+   L34
+    LINENUMBER 57 L34
+    GETSTATIC androidx/compose/material3/MaterialTheme.INSTANCE : Landroidx/compose/material3/MaterialTheme;
+    ALOAD 1
+    GETSTATIC androidx/compose/material3/MaterialTheme.$stable : I
+    INVOKEVIRTUAL androidx/compose/material3/MaterialTheme.getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+    INVOKEVIRTUAL androidx/compose/material3/Typography.getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+    ASTORE 6
+   L35
+    LINENUMBER 58 L35
+    GETSTATIC androidx/compose/ui/Modifier.Companion : Landroidx/compose/ui/Modifier$Companion;
+    CHECKCAST androidx/compose/ui/Modifier
+    FCONST_0
+    FCONST_0
+    FCONST_0
+    BIPUSH 8
+    ISTORE 8
+   L36
+    ICONST_0
+    ISTORE 9
+   L37
+    LINENUMBER 109 L37
+    ILOAD 8
+    I2F
+    INVOKESTATIC androidx/compose/ui/unit/Dp.constructor-impl (F)F
+    GOTO L38
+   L38
+    LINENUMBER 58 L38
+    BIPUSH 7
+    ACONST_NULL
+    INVOKESTATIC androidx/compose/foundation/layout/PaddingKt.padding-qDBjuR0$default (Landroidx/compose/ui/Modifier;FFFFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+    ASTORE 7
+   L39
+    LINENUMBER 56 L39
+    ALOAD 5
+   L40
+    LINENUMBER 58 L40
+    ALOAD 7
+    LCONST_0
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ACONST_NULL
+   L41
+    LINENUMBER 57 L41
+    ALOAD 6
+    ALOAD 1
+    BIPUSH 48
+    ICONST_0
+    LDC 65532
+   L42
+    LINENUMBER 55 L42
+    INVOKESTATIC androidx/compose/material3/TextKt.Text--4IGK_g (Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILkotlin/jvm/functions/Function1;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+   L43
+    LINENUMBER 62 L43
+    GETSTATIC edu/ap/project/screens/ListScreenKt$ItemBox$1$1.$$$$item : Ledu/ap/project/model/Item;
+    INVOKEVIRTUAL edu/ap/project/model/Item.getType ()Ledu/ap/project/model/ItemType;
+    INVOKEDYNAMIC makeConcatWithConstants(Ledu/ap/project/model/ItemType;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "Type: \u0001"
+    ]
+    ASTORE 5
+   L44
+    LINENUMBER 63 L44
+    GETSTATIC androidx/compose/material3/MaterialTheme.INSTANCE : Landroidx/compose/material3/MaterialTheme;
+    ALOAD 1
+    GETSTATIC androidx/compose/material3/MaterialTheme.$stable : I
+    INVOKEVIRTUAL androidx/compose/material3/MaterialTheme.getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+    INVOKEVIRTUAL androidx/compose/material3/Typography.getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+    ASTORE 6
+   L45
+    LINENUMBER 64 L45
+    GETSTATIC androidx/compose/ui/Modifier.Companion : Landroidx/compose/ui/Modifier$Companion;
+    CHECKCAST androidx/compose/ui/Modifier
+    FCONST_0
+    FCONST_0
+    FCONST_0
+    BIPUSH 8
+    ISTORE 8
+   L46
+    ICONST_0
+    ISTORE 9
+   L47
+    LINENUMBER 110 L47
+    ILOAD 8
+    I2F
+    INVOKESTATIC androidx/compose/ui/unit/Dp.constructor-impl (F)F
+    GOTO L48
+   L48
+    LINENUMBER 64 L48
+    BIPUSH 7
+    ACONST_NULL
+    INVOKESTATIC androidx/compose/foundation/layout/PaddingKt.padding-qDBjuR0$default (Landroidx/compose/ui/Modifier;FFFFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+    ASTORE 7
+   L49
+    LINENUMBER 62 L49
+    ALOAD 5
+   L50
+    LINENUMBER 64 L50
+    ALOAD 7
+    LCONST_0
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ACONST_NULL
+   L51
+    LINENUMBER 63 L51
+    ALOAD 6
+    ALOAD 1
+    BIPUSH 48
+    ICONST_0
+    LDC 65532
+   L52
+    LINENUMBER 61 L52
+    INVOKESTATIC androidx/compose/material3/TextKt.Text--4IGK_g (Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILkotlin/jvm/functions/Function1;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+   L53
+    LINENUMBER 68 L53
+    GETSTATIC edu/ap/project/screens/ListScreenKt$ItemBox$1$1.$$$$item : Ledu/ap/project/model/Item;
+    INVOKEVIRTUAL edu/ap/project/model/Item.getEndDate ()Lcom/google/firebase/Timestamp;
+    ASTORE 5
+    ALOAD 5
+    DUP
+    IFNULL L54
+    INVOKEVIRTUAL com/google/firebase/Timestamp.toDate ()Ljava/util/Date;
+    ASTORE 6
+    ALOAD 6
+    DUP
+    IFNULL L54
+    IFNULL L54
+    ALOAD 6
+    ASTORE 7
+    ALOAD 7
+    CHECKCAST java/util/Date
+    ASTORE 8
+   L55
+    ICONST_0
+    ISTORE 9
+   L56
+    LINENUMBER 69 L56
+    NEW java/text/SimpleDateFormat
+    DUP
+    LDC "dd MMM yyyy"
+    INVOKESTATIC java/util/Locale.getDefault ()Ljava/util/Locale;
+    INVOKESPECIAL java/text/SimpleDateFormat.<init> (Ljava/lang/String;Ljava/util/Locale;)V
+   L57
+    LINENUMBER 70 L57
+    ALOAD 8
+   L58
+    LINENUMBER 69 L58
+    INVOKEVIRTUAL java/text/SimpleDateFormat.format (Ljava/util/Date;)Ljava/lang/String;
+   L59
+    LINENUMBER 71 L59
+    GOTO L60
+   L60
+   L61
+    LINENUMBER 68 L61
+    GOTO L62
+   L62
+    CHECKCAST java/lang/String
+    GOTO L63
+   L54
+    LINENUMBER 68 L54
+    ACONST_NULL
+   L63
+    INVOKEDYNAMIC makeConcatWithConstants(Ljava/lang/String;)Ljava/lang/String; [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      "End Date: \u0001"
+    ]
+    ACONST_NULL
+    LCONST_0
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ACONST_NULL
+    ACONST_NULL
+    LCONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ICONST_0
+    ACONST_NULL
+   L64
+    LINENUMBER 73 L64
+    GETSTATIC androidx/compose/material3/MaterialTheme.INSTANCE : Landroidx/compose/material3/MaterialTheme;
+    ALOAD 1
+    GETSTATIC androidx/compose/material3/MaterialTheme.$stable : I
+    INVOKEVIRTUAL androidx/compose/material3/MaterialTheme.getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+    INVOKEVIRTUAL androidx/compose/material3/Typography.getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+    ALOAD 1
+    ICONST_0
+    ICONST_0
+    LDC 65534
+   L65
+    LINENUMBER 67 L65
+    INVOKESTATIC androidx/compose/material3/TextKt.Text--4IGK_g (Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILkotlin/jvm/functions/Function1;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+    ALOAD 1
+   L66
+    LINENUMBER 37 L66
+    INVOKESTATIC androidx/compose/runtime/ComposerKt.sourceInformationMarkerEnd (Landroidx/compose/runtime/Composer;)V
+   L67
+    LINENUMBER 75 L67
+    RETURN
+   L68
+    LOCALVARIABLE $i$f$getDp I L7 L8 9
+    LOCALVARIABLE $this$dp$iv I L6 L8 8
+    LOCALVARIABLE $i$f$getDp I L17 L18 9
+    LOCALVARIABLE $this$dp$iv I L16 L18 8
+    LOCALVARIABLE $i$f$getDp I L27 L28 9
+    LOCALVARIABLE $this$dp$iv I L26 L28 8
+    LOCALVARIABLE $i$f$getDp I L37 L38 9
+    LOCALVARIABLE $this$dp$iv I L36 L38 8
+    LOCALVARIABLE $i$f$getDp I L47 L48 9
+    LOCALVARIABLE $this$dp$iv I L46 L48 8
+    LOCALVARIABLE $i$a$-let-ListScreenKt$ItemBox$1$1$1 I L56 L60 9
+    LOCALVARIABLE it Ljava/util/Date; L55 L60 8
+    LOCALVARIABLE $i$a$-Column-ListScreenKt$ItemBox$1$1 I L1 L68 4
+    LOCALVARIABLE $this$ItemBox_u24lambda_u242_u24lambda_u241 Landroidx/compose/foundation/layout/ColumnScope; L0 L68 0
+    LOCALVARIABLE $item Ledu/ap/project/model/Item; L0 L68 3
+    LOCALVARIABLE $composer Landroidx/compose/runtime/Composer; L0 L68 1
+    LOCALVARIABLE $changed I L0 L68 2
+    MAXSTACK = 25
+    MAXLOCALS = 11
+
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.wrapException(MethodInliner.kt:1111)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.preprocessNodeBeforeInline(MethodInliner.kt:894)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.markPlacesForInlineAndRemoveInlinable(MethodInliner.kt:600)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.doInline(MethodInliner.kt:93)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.access$doInline(MethodInliner.kt:41)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner$doInline$lambdaInliner$1.visitMethodInsn(MethodInliner.kt:341)
+	at org.jetbrains.org.objectweb.asm.tree.MethodInsnNode.accept(MethodInsnNode.java:115)
+	at org.jetbrains.org.objectweb.asm.tree.InsnList.accept(InsnList.java:144)
+	at org.jetbrains.org.objectweb.asm.tree.MethodNode.accept(MethodNode.java:751)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.doInline(MethodInliner.kt:421)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.doInline(MethodInliner.kt:98)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.doInline(MethodInliner.kt:72)
+	at org.jetbrains.kotlin.codegen.inline.InlineCodegen.inlineCall(InlineCodegen.kt:127)
+	at org.jetbrains.kotlin.codegen.inline.InlineCodegen.performInline(InlineCodegen.kt:52)
+	... 104 more
+Caused by: java.lang.ClassCastException: class org.jetbrains.org.objectweb.asm.tree.JumpInsnNode cannot be cast to class org.jetbrains.org.objectweb.asm.tree.VarInsnNode (org.jetbrains.org.objectweb.asm.tree.JumpInsnNode and org.jetbrains.org.objectweb.asm.tree.VarInsnNode are in unnamed module of loader 'app')
+	at org.jetbrains.kotlin.codegen.optimization.temporaryVals.TemporaryVariablesEliminationTransformer.rewriteSafeCallPart(TemporaryVariablesEliminationTransformer.kt:510)
+	at org.jetbrains.kotlin.codegen.optimization.temporaryVals.TemporaryVariablesEliminationTransformer.simplifyKnownSafeCallPatterns(TemporaryVariablesEliminationTransformer.kt:465)
+	at org.jetbrains.kotlin.codegen.optimization.temporaryVals.TemporaryVariablesEliminationTransformer.transform(TemporaryVariablesEliminationTransformer.kt:37)
+	at org.jetbrains.kotlin.codegen.inline.MethodInliner.preprocessNodeBeforeInline(MethodInliner.kt:892)
+	... 116 more
+
+

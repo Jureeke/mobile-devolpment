@@ -1,9 +1,8 @@
-package edu.ap.project
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.ap.project.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -20,50 +19,62 @@ class UserViewModel : ViewModel() {
     private fun fetchUserData() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
-            // Fetch user data from Firestore
-            val userId = currentUser.uid
-            FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
+            // Use coroutine to fetch user data from Firestore
+            viewModelScope.launch {
+                try {
+                    val userId = currentUser.uid
+                    val document = FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(userId)
+                        .get()
+                        .await() // Use await() to suspend and get the result
+
+                    if (document.exists()) {
                         val user = document.toObject(User::class.java)
                         _userData.value = user
+                    } else {
+                        // Handle the case where document does not exist
+                        _userData.value = null
                     }
-                }
-                .addOnFailureListener {
+                } catch (e: Exception) {
                     // Handle error
                     _userData.value = null
                 }
+            }
         } else {
             // Handle case when no user is logged in
             _userData.value = null
         }
     }
 
-    // Functie om gebruikersprofiel te updaten (behalve wachtwoord)
+    // Function to update the user profile (excluding password)
     fun updateUserProfile(updatedUser: User) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
-            val userId = currentUser.uid
-            FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(userId)
-                .update(
-                    "username", updatedUser.username,
-                    "email", updatedUser.email,
-                    "profileImageUrl", updatedUser.profileImageUrl,
-                    "location", updatedUser.location,
-                    "createdAt", updatedUser.createdAt
-                )
-                .addOnSuccessListener {
-                    // Bijwerken succesvol, haal de gegevens opnieuw op
+            viewModelScope.launch {
+                try {
+                    val userId = currentUser.uid
+                    FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(userId)
+                        .update(
+                            "username", updatedUser.username,
+                            "email", updatedUser.email,
+                            "profileImageUrl", updatedUser.profileImageUrl,
+                            "location", updatedUser.location,
+                            "locationCoordinates", updatedUser.locationCoordinates,
+                            "createdAt", updatedUser.createdAt
+                        )
+                        .await() // Use await() to suspend and get the result
+
+                    // After successfully updating, fetch the updated data
                     fetchUserData()
+
+                } catch (e: Exception) {
+                    // Handle failure (e.g., log the error or notify the user)
                 }
-                .addOnFailureListener {
-                    // Fout afhandelen (bijv. loggen)
-                }
+            }
         }
     }
+
 }

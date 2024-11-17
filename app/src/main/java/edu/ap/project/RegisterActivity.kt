@@ -15,6 +15,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import edu.ap.project.model.User
 import edu.ap.project.theme.ProjectTheme
 
 class RegisterActivity : ComponentActivity() {
@@ -157,7 +159,11 @@ fun RegisterScreen(
                                         val user = User(
                                             uid = firebaseUser.uid,
                                             email = trimmedEmail,
-                                            username = trimmedUsername
+                                            username = trimmedUsername,
+                                            profileImageUrl = null,
+                                            location = null,
+                                            locationCoordinates = GeoPoint(0.0, 0.0), // Default to a non-null GeoPoint
+                                            createdAt = System.currentTimeMillis()
                                         )
 
                                         // Save user data to Firestore
