@@ -1,6 +1,7 @@
 package edu.ap.project
 
 import UserViewModel
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -171,7 +172,7 @@ fun ProfileScreenPreview() {
     ProfileScreen()
 }
 
-suspend fun getCoordinatesFromLocation(locationName: String, context: android.content.Context): Pair<Double, Double>? {
+suspend fun getCoordinatesFromLocation(locationName: String, context: Context): Pair<Double, Double>? {
     return withContext(Dispatchers.IO) {
         val client = OkHttpClient()
         val url = "https://nominatim.openstreetmap.org/search?q=$locationName&format=json&addressdetails=1&lang=nl"
