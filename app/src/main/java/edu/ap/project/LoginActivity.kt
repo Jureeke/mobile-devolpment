@@ -67,7 +67,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Wachtwoord") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
@@ -85,14 +85,14 @@ fun LoginScreen(
                             if (task.isSuccessful) {
                                 Toast.makeText(
                                     context,
-                                    "Login successful",
+                                    "Login gelukt",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 context.startActivity(Intent(context, MainActivity::class.java))
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Login failed: ${task.exception?.message}",
+                                    "Login gefaald: ${task.exception?.message}",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -100,7 +100,7 @@ fun LoginScreen(
                 } else {
                     Toast.makeText(
                         context,
-                        "Please enter email and password",
+                        "geef je email en wachtwoord a.u.b",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -118,7 +118,7 @@ fun LoginScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register")
+            Text("Registreer")
         }
     }
 }

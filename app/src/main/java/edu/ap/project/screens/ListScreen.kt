@@ -49,16 +49,25 @@ fun ItemBox(item: Item) {
             )
             // Price
             Text(
-                text = "Price: €${item.price}",
+                text = "Prijs: €${item.price}",
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.secondary),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             // Renter
-            Text(
-                text = "Renter: ${item.renter}",
-                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            val renter = item.renter
+            if (renter != null) {
+                Text(
+                    text = "Huurder: ${item.renter}",
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            } else {
+                Text(
+                    text = "Niet Verhuurd",
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface)
+                )
+            }
+
             // Type
             Text(
                 text = "Type: ${item.type}",
@@ -70,13 +79,13 @@ fun ItemBox(item: Item) {
             if (endDate != null) {
                 // If endDate is not null, format it
                 Text(
-                    text = "End Date: ${SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(endDate)}",
+                    text = "Eind Datum: ${SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(endDate)}",
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface)
                 )
             } else {
                 // If endDate is null, show a default message
                 Text(
-                    text = "End Date: Not set",
+                    text = "Eind Datum: N.V.T.",
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface)
                 )
             }
