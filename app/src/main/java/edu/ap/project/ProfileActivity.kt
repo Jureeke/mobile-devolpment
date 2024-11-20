@@ -189,14 +189,18 @@ suspend fun getCoordinatesFromLocation(locationName: String, context: Context): 
                     try {
                         val jsonResponse = JSONArray(it)
                         if (jsonResponse.length() > 0) {
-                            val result = jsonResponse.getJSONObject(0)
-                            val lat = result.getDouble("lat")
-                            val lon = result.getDouble("lon")
+                            // Always take the first result
+                            val firstResult = jsonResponse.getJSONObject(0)
+                            val lat = firstResult.optDouble("lat", Double.NaN)
+                            val lon = firstResult.optDouble("lon", Double.NaN)
 
-                            // Return the coordinates as a Pair
-                            return@withContext Pair(lat, lon)
+                            if (!lat.isNaN() && !lon.isNaN()) {
+                                return@withContext Pair(lat, lon)
+                            } else {
+                                Log.e("UserViewModel", "Invalid coordinates in the first result")
+                            }
                         } else {
-                            Log.e("UserViewModel", "Geen Locatie Meegegeven")
+                            Log.e("UserViewModel", "No results found for the location")
                         }
                     } catch (e: Exception) {
                         Log.e("UserViewModel", "Error parsing response: ${e.message}")
@@ -208,9 +212,11 @@ suspend fun getCoordinatesFromLocation(locationName: String, context: Context): 
         } catch (e: Exception) {
             Log.e("UserViewModel", "Error fetching location: ${e.message}")
         }
+
         // Return null if no coordinates found or an error occurred
         return@withContext null
     }
 }
+
 
 
