@@ -1,6 +1,7 @@
 package edu.ap.project.screens
 
 import ItemViewModel
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -31,7 +34,7 @@ fun ItemBox(item: Item) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
-            .shadow(8.dp, RoundedCornerShape(16.dp))  // Add shadow for card effect
+            .shadow(8.dp, RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
         Column {
@@ -99,11 +102,13 @@ fun ItemBox(item: Item) {
 fun ListScreen(itemViewModel: ItemViewModel = viewModel()) {
     val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
     val userItems = itemViewModel.userItems.observeAsState(emptyList())
-
+    val allItems = itemViewModel.allItems.observeAsState(emptyList())
+    val isViewingUserItems = remember { mutableStateOf(false) } // Use state for reactivity
 
     // Fetch items on initial composition
     LaunchedEffect(currentUserUid) {
-            itemViewModel.getItemsForUser(currentUserUid)
+        itemViewModel.getItemsForUser(currentUserUid)
+        itemViewModel.getAllItems()
     }
 
     Column(
@@ -111,14 +116,25 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel()) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Lijst overzicht")
-        // Display the fetched items
-        userItems.value.forEach { item ->
+        Text(
+            text = if (isViewingUserItems.value) "Mijn Items" else "Alle Items",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        Button(
+            onClick = { isViewingUserItems.value = !isViewingUserItems.value }, // Update state
+            modifier = Modifier.padding(bottom = 16.dp)
+        ) {
+            Text(text = if (isViewingUserItems.value) "Toon Alle Items" else "Mijn Items")
+        }
 
+        val itemsToShow = if (isViewingUserItems.value) userItems.value else allItems.value
+        Log.d("test", "showing ${if (isViewingUserItems.value) "user items" else "all items"}")
+        itemsToShow.forEach { item ->
             ItemBox(item = item)
         }
     }
-
 }
+
 
 

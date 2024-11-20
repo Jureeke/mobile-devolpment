@@ -24,6 +24,9 @@ class ItemViewModel : ViewModel() {
     private val _userItems = MutableLiveData<List<Item>>()
     val userItems: LiveData<List<Item>> get() = _userItems
 
+    private val _allItems = MutableLiveData<List<Item>>()
+    val allItems: LiveData<List<Item>> get() = _allItems
+
     init {
         // Fetch the current user's UID based on email
         fetchCurrentUserUidAndLocation()
@@ -101,4 +104,21 @@ class ItemViewModel : ViewModel() {
             _userItems.value = emptyList()  // Return an empty list if no user UID is found
         }
     }
+
+    fun getAllItems() {
+        firestore.collection("items")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val items = querySnapshot.documents.mapNotNull { document ->
+                    document.toObject(Item::class.java)  // Convert each document to an Item object
+                }
+                _allItems.value = items
+                Log.d("Firestore", "Fetched ${items.size} items.")
+            }
+            .addOnFailureListener { exception ->
+                _allItems.value = emptyList()  // Return an empty list on failure
+                Log.e("Firestore", "Failed to fetch items: ${exception.message}", exception)
+            }
+    }
+
 }
