@@ -47,9 +47,8 @@ class ProfileActivity : ComponentActivity() {
 @Composable
 fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
     val user by userViewModel.userData.collectAsState()
-    val context = LocalContext.current // Get context here
+    val context = LocalContext.current
 
-    // Controleer of de gegevens van de gebruiker beschikbaar zijn
     if (user == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -58,13 +57,11 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             CircularProgressIndicator()
         }
     } else {
-        // Verkrijg de gegevens van de gebruiker
         val imageUrl = user?.profileImageUrl ?: ""
         val name = user?.username ?: ""
         val email = user?.email ?: ""
         val location = user?.location ?: ""
 
-        // Mutable state voor het bewerken van de gegevens
         var newUsername by remember { mutableStateOf(name) }
         var newEmail by remember { mutableStateOf(email) }
         var newLocation by remember { mutableStateOf(location) }
@@ -74,20 +71,28 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .padding(top = 32.dp),
+                .padding(top = 32.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             // Profielfoto
-            Image(
-                painter = rememberAsyncImagePainter(imageUrl),
-                contentDescription = "Profielfoto",
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(120.dp)
-                    .padding(16.dp)
                     .clip(CircleShape)
                     .background(Color.LightGray)
-            )
+            ) {
+                if (newImageUrl.isNotEmpty()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(newImageUrl),
+                        contentDescription = "Profielfoto",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -96,7 +101,9 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                 value = newUsername,
                 onValueChange = { newUsername = it },
                 label = { Text("Naam") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             )
 
             // Bewerkbare e-mail
@@ -104,7 +111,9 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                 value = newEmail,
                 onValueChange = { newEmail = it },
                 label = { Text("E-mail") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             )
 
             // Bewerkbare locatie
@@ -112,50 +121,42 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                 value = newLocation,
                 onValueChange = { newLocation = it },
                 label = { Text("Locatie") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Input voor een nieuwe profielfoto URL
-            Box(
+            // Profielfoto URL
+            TextField(
+                value = newImageUrl,
+                onValueChange = { newImageUrl = it },
+                label = { Text("Profielfoto URL") },
                 modifier = Modifier
-                    .fillMaxWidth().padding(bottom = 8.dp)
-                    .verticalScroll(rememberScrollState()) // Add vertical scroll
-                    .heightIn(min = 56.dp, max = 100.dp)
-            ) {
-                TextField(
-                    value = newImageUrl,
-                    onValueChange = { newImageUrl = it },
-                    label = { Text("Nieuwe Profielfoto URL") },
-                )
-            }
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Knop om de gegevens bij te werken
+            // Knop om gegevens bij te werken
             Button(
                 onClick = {
-                    // Use a coroutine to call the suspend function and get coordinates
                     GlobalScope.launch(Dispatchers.Main) {
-                        val coordinates = getCoordinatesFromLocation(newLocation, context)
-                        if (coordinates != null) {
-                            val (latitude, longitude) = coordinates
+                        val updatedUser = User(
+                            uid = user?.uid ?: "",
+                            email = newEmail,
+                            username = newUsername,
+                            profileImageUrl = newImageUrl,
+                            location = newLocation,
+                            locationCoordinates = GeoPoint(0.0, 0.0),
+                            createdAt = user?.createdAt ?: System.currentTimeMillis()
+                        )
+                        userViewModel.updateUserProfile(updatedUser)
 
-                            // Log the coordinates
-                            val updatedUser = User(
-                                uid = user?.uid ?: "",
-                                email = newEmail,
-                                username = newUsername,
-                                profileImageUrl = newImageUrl,
-                                location = newLocation,
-                                locationCoordinates = GeoPoint(latitude, longitude), // Set the coordinates
-                                createdAt = user?.createdAt ?: System.currentTimeMillis()
-                            )
-                            userViewModel.updateUserProfile(updatedUser)
-                        } else {
-                            Toast.makeText(context, "Locatie niet gevonden", Toast.LENGTH_SHORT).show()
-                        }
+                        // Meld dat de gegevens succesvol zijn opgeslagen
+                        Toast.makeText(
+                            context,
+                            "Gegevens succesvol bijgewerkt!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier.padding(top = 16.dp)
@@ -171,6 +172,8 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
 fun ProfileScreenPreview() {
     ProfileScreen()
 }
+
+
 
 suspend fun getCoordinatesFromLocation(locationName: String, context: Context): Pair<Double, Double>? {
     return withContext(Dispatchers.IO) {
@@ -217,6 +220,7 @@ suspend fun getCoordinatesFromLocation(locationName: String, context: Context): 
         return@withContext null
     }
 }
+
 
 
 
