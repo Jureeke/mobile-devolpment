@@ -14,4 +14,10 @@ enum class ItemType(val typeName: String) {
 
     // You can add additional methods or properties if needed
     override fun toString(): String = typeName
+
+    companion object {
+        fun fromString(typeName: String?): ItemType {
+            return values().find { it.typeName == typeName } ?: OTHERS
+        }
+    }
 }

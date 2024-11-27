@@ -21,7 +21,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import edu.ap.project.screens.AddScreen
+import edu.ap.project.screens.DetailScreen
 import edu.ap.project.screens.HomeScreen
 import edu.ap.project.screens.ListScreen
 import edu.ap.project.screens.MapScreen
@@ -48,10 +50,18 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("home") { HomeScreen(navController) }
-                        composable("list") { ListScreen() }
+                        composable("list") { ListScreen(navController = navController) }
                         composable("add") { AddScreen() }
                         composable("map") { MapScreen() }
-                        composable("profile") { ProfileScreen() }
+                        composable("profile") { ProfileScreen()}
+                        composable(
+                            "detail/{itemId}",
+                            arguments = listOf(navArgument("itemId") { nullable = false })
+                        ) { backStackEntry ->
+                            val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
+                            DetailScreen(itemId = itemId, navController = navController)
+                        }
+
                     }
                 }
             }

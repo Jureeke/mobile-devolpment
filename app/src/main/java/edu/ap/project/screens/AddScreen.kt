@@ -106,9 +106,9 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
             )
         }
 
-
         Box(modifier = Modifier
-            .fillMaxWidth().padding(vertical = 8.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
             .clickable { expanded = !expanded }
         ) {
             OutlinedTextField(
@@ -116,7 +116,8 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("Type van het item") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
             )
 
             DropdownMenu(

@@ -1,11 +1,15 @@
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import edu.ap.project.model.Item
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class ItemViewModel : ViewModel() {
 
@@ -26,6 +30,15 @@ class ItemViewModel : ViewModel() {
 
     private val _allItems = MutableLiveData<List<Item>>()
     val allItems: LiveData<List<Item>> get() = _allItems
+
+    private val _currentItem = MutableLiveData<Item?>()
+    val currentItem: LiveData<Item?> get() = _currentItem
+
+    private val _loadingState = MutableLiveData<Boolean>()
+    val loadingState: LiveData<Boolean> get() = _loadingState
+
+    private val _errorState = MutableLiveData<String?>()
+    val errorState: LiveData<String?> get() = _errorState
 
     init {
         // Fetch the current user's UID based on email
@@ -52,11 +65,22 @@ class ItemViewModel : ViewModel() {
             }
     }
 
-    fun addItem(title: String, description: String, price: String, imageUrl: String, location: GeoPoint, type: String) {
+    fun addItem(
+        title: String,
+        description: String,
+        price: String,
+        imageUrl: String,
+        location: GeoPoint,
+        type: String
+    ) {
         val parsedPrice = price.toDoubleOrNull() ?: 0.0
 
         val userUid = _currentUserUid.value
         if (userUid != null) {
+            // Nieuwe documentreferentie (maakt automatisch een unieke ID aan)
+            val newDocumentRef = firestore.collection("items").document()
+
+            // Data van het item, inclusief het gegenereerde document-ID
             val newItem = hashMapOf(
                 "title" to title,
                 "description" to description,
@@ -66,11 +90,13 @@ class ItemViewModel : ViewModel() {
                 "owner" to "/users/$userUid",
                 "photo" to imageUrl,
                 "renter" to null,
-                "type" to type
+                "type" to type,
+                "uid" to newDocumentRef.id // Stel het ID van het document in als uid
             )
 
-            firestore.collection("items")
-                .add(newItem)
+            // Item opslaan met het expliciete document-ID
+            newDocumentRef
+                .set(newItem)
                 .addOnSuccessListener {
                     _itemAddedStatus.value = true
                 }
@@ -81,6 +107,7 @@ class ItemViewModel : ViewModel() {
             _itemAddedStatus.value = false
         }
     }
+
 
     fun getItemsForUser(currentUserUid: String?) {
         if (currentUserUid != null) {
@@ -121,4 +148,45 @@ class ItemViewModel : ViewModel() {
             }
     }
 
-}
+    fun fetchItemById(itemId: String) {
+        viewModelScope.launch {
+            try {
+                _loadingState.value = true
+                _errorState.value = null
+                val document = firestore.collection("items").document(itemId).get().await()
+                val item = document.toObject(Item::class.java)?.copy(
+                    uid = document.id
+                )
+                _currentItem.value = item
+            } catch (e: Exception) {
+                Log.e("ItemViewModel", "Error fetching item by ID: $e")
+                _currentItem.value = null
+                _errorState.value = "Failed to fetch item details"
+            } finally {
+                _loadingState.value = false
+            }
+        }
+    }
+
+
+    private val _ownerName = MutableLiveData<String?>()
+    val ownerName: LiveData<String?> get() = _ownerName
+
+    fun fetchOwnerName(ownerUid: String) {
+        var string = ownerUid.split('/')
+        var id = string.get(2)
+
+        firestore.collection("users")
+            .document(id)
+            .get()
+            .addOnSuccessListener { document ->
+                val name = document.getString("username")
+                _ownerName.value = name
+            }
+            .addOnFailureListener {
+                _ownerName.value = "Unknown"
+            }
+        }
+
+    }
+
