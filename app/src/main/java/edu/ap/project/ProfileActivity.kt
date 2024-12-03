@@ -120,7 +120,7 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             TextField(
                 value = newLocation,
                 onValueChange = { newLocation = it },
-                label = { Text("Locatie") },
+                label = { Text("Adres") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
@@ -140,23 +140,23 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
             Button(
                 onClick = {
                     GlobalScope.launch(Dispatchers.Main) {
-                        val updatedUser = User(
-                            uid = user?.uid ?: "",
-                            email = newEmail,
-                            username = newUsername,
-                            profileImageUrl = newImageUrl,
-                            location = newLocation,
-                            locationCoordinates = GeoPoint(0.0, 0.0),
-                            createdAt = user?.createdAt ?: System.currentTimeMillis()
-                        )
-                        userViewModel.updateUserProfile(updatedUser)
-
-                        // Meld dat de gegevens succesvol zijn opgeslagen
-                        Toast.makeText(
-                            context,
-                            "Gegevens succesvol bijgewerkt!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        // Verkrijg de coördinaten voor de nieuwe locatie
+                        val coordinates = getCoordinatesFromLocation(newLocation, context)
+                        if (coordinates != null) {
+                            val updatedUser = User(
+                                uid = user?.uid ?: "",
+                                email = newEmail,
+                                username = newUsername,
+                                profileImageUrl = newImageUrl,
+                                location = newLocation,
+                                locationCoordinates = GeoPoint(coordinates.first, coordinates.second),
+                                createdAt = user?.createdAt ?: System.currentTimeMillis()
+                            )
+                            userViewModel.updateUserProfile(updatedUser)
+                            Toast.makeText(context, "Gegevens succesvol bijgewerkt!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Kon geen coördinaten vinden voor de opgegeven locatie.", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 },
                 modifier = Modifier.padding(top = 16.dp)
@@ -166,6 +166,7 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -177,46 +178,33 @@ fun ProfileScreenPreview() {
 
 suspend fun getCoordinatesFromLocation(locationName: String, context: Context): Pair<Double, Double>? {
     return withContext(Dispatchers.IO) {
-        val client = OkHttpClient()
-        val url = "https://nominatim.openstreetmap.org/search?q=$locationName&format=json&addressdetails=1&lang=nl"
-        val request = Request.Builder()
-            .url(url)
+        val client = OkHttpClient.Builder()
+            .callTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
             .build()
+        val encodedLocation = java.net.URLEncoder.encode(locationName, "UTF-8")
+        val url = "https://nominatim.openstreetmap.org/search?q=$encodedLocation&format=json&addressdetails=1"
+        val request = Request.Builder().url(url).build()
 
         try {
             val response = client.newCall(request).execute()
-
             if (response.isSuccessful) {
-                val responseBody = response.body?.string()
-                responseBody?.let {
-                    try {
-                        val jsonResponse = JSONArray(it)
-                        if (jsonResponse.length() > 0) {
-                            // Always take the first result
-                            val firstResult = jsonResponse.getJSONObject(0)
-                            val lat = firstResult.optDouble("lat", Double.NaN)
-                            val lon = firstResult.optDouble("lon", Double.NaN)
+                response.body?.string()?.let { responseBody ->
+                    val jsonResponse = JSONArray(responseBody)
+                    if (jsonResponse.length() > 0) {
+                        val firstResult = jsonResponse.getJSONObject(0)
+                        val lat = firstResult.optDouble("lat", Double.NaN)
+                        val lon = firstResult.optDouble("lon", Double.NaN)
 
-                            if (!lat.isNaN() && !lon.isNaN()) {
-                                return@withContext Pair(lat, lon)
-                            } else {
-                                Log.e("UserViewModel", "Invalid coordinates in the first result")
-                            }
-                        } else {
-                            Log.e("UserViewModel", "No results found for the location")
+                        if (!lat.isNaN() && !lon.isNaN()) {
+                            return@withContext Pair(lat, lon)
                         }
-                    } catch (e: Exception) {
-                        Log.e("UserViewModel", "Error parsing response: ${e.message}")
                     }
                 }
-            } else {
-                Log.e("UserViewModel", "API request failed with code: ${response.code}")
             }
         } catch (e: Exception) {
-            Log.e("UserViewModel", "Error fetching location: ${e.message}")
+            Log.e("LocationService", "Error fetching coordinates: ${e.message}")
         }
 
-        // Return null if no coordinates found or an error occurred
         return@withContext null
     }
 }
