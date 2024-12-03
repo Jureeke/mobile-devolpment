@@ -77,4 +77,8 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    fun refreshUserData() {
+        fetchUserData()
+    }
+
 }
