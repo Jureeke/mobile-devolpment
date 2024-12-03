@@ -76,7 +76,7 @@ fun DetailScreen(
                 ) {
                     // Back Button
                     IconButton(
-                        onClick = { navController.navigate("list") },
+                        onClick = { navController.popBackStack()},
                         modifier = Modifier.size(36.dp) // Kleinere knop
                     ) {
                         Icon(
