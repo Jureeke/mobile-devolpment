@@ -1,157 +1,243 @@
 package edu.ap.project.screens
 
-import androidx.compose.foundation.background
+import ItemViewModel
+import UserViewModel
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.material.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.zIndex
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONArray
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import java.net.URL
+import org.osmdroid.views.overlay.Polygon
+import android.graphics.Color
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.SliderDefaults
+import androidx.navigation.NavController
+import edu.ap.project.model.Item
 
 @Composable
-fun MapScreen() {
+fun MapScreen(
+    itemViewModel: ItemViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel(),
+    navController: NavController
+) {
     val context = LocalContext.current
+
+    // State voor het geselecteerde item
+    var selectedItem by remember { mutableStateOf<Item?>(null) }
+    var mapView: MapView? = null
+    var range by remember { mutableStateOf(5f) }
 
     // OSMDroid configuratie laden
     Configuration.getInstance().load(context, context.getSharedPreferences("osmdroid", 0))
 
-    // State voor de zoekbalk en schuifregelaar
-    var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
-    var mapCenter by remember { mutableStateOf(GeoPoint(51.2302, 4.4165)) }
-    var searchRadius by remember { mutableStateOf(20f) }
-    var errorMessage by remember { mutableStateOf("") }
-
-    val scope = rememberCoroutineScope()
+    val items by itemViewModel.allItems.observeAsState(emptyList())
+    val user by userViewModel.userData.collectAsState(initial = null)
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Kaartweergave (achtergrond)
         AndroidView(
             factory = { ctx ->
-                val mapView = MapView(ctx)
-                mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
-
-                val mapController = mapView.controller
-                mapController.setZoom(15.0)
-                mapController.setCenter(mapCenter)
-
-                mapView
+                mapView = MapView(ctx).apply {
+                    setTileSource(TileSourceFactory.MAPNIK)
+                    controller.setZoom(12.0)
+                }
+                mapView!!
             },
-            modifier = Modifier
-                .fillMaxSize()
-                .zIndex(0f) // Zorgt ervoor dat de kaart achter andere UI-elementen ligt
+            update = { view ->
+                if (user != null) {
+                    user?.locationCoordinates?.let {
+                        view.controller.setCenter(GeoPoint(it.latitude, it.longitude))
+                    }
+
+                    val zoomLevel = calculateZoomLevel(range)
+                    view.controller.setZoom(zoomLevel)
+
+                    val userLocation = GeoPoint(user!!.locationCoordinates!!.latitude, user!!.locationCoordinates!!.longitude)
+                    view.overlays.clear()
+
+                    val circlePolygon = createCircle(userLocation, range * 1000.0)
+                    view.overlays.add(circlePolygon)
+
+                    val markerOverlay = org.osmdroid.views.overlay.ItemizedOverlayWithFocus<org.osmdroid.views.overlay.OverlayItem>(
+                        items.filter { item ->
+                            calculateDistance(
+                                user!!.locationCoordinates?.latitude ?: 0.0,
+                                user!!.locationCoordinates?.longitude ?: 0.0,
+                                item.location!!.latitude,
+                                item.location!!.longitude
+                            ) <= range
+                        }.map { item ->
+                            org.osmdroid.views.overlay.OverlayItem(
+                                item.title,
+                                item.description,
+                                GeoPoint(item.location!!.latitude, item.location!!.longitude)
+                            )
+                        },
+                        object : org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener<org.osmdroid.views.overlay.OverlayItem> {
+                            override fun onItemSingleTapUp(index: Int, item: org.osmdroid.views.overlay.OverlayItem?): Boolean {
+                                if (item != null) {
+                                    // Stel het geselecteerde item in
+                                    selectedItem = items[index]
+                                }
+                                return true
+                            }
+
+                            override fun onItemLongPress(index: Int, item: org.osmdroid.views.overlay.OverlayItem?): Boolean {
+                                return true
+                            }
+                        },
+                        context
+                    )
+
+                    markerOverlay.setFocusItemsOnTap(true)
+                    view.overlays.add(markerOverlay)
+                }
+            },
+            modifier = Modifier.fillMaxSize()
         )
 
-        // Zoekbalk en schuifregelaar (voorgrond)
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(Color.White)
-                .padding(16.dp)
-                .zIndex(1f) // Zorgt ervoor dat deze UI bovenop de kaart blijft
-        ) {
-            // Zoekbalk met knop
-            Row(
+        // Info-box met praktische info en navigatieknop
+        selectedItem?.let { item ->
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .align(Alignment.TopCenter)
+                    .padding(16.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(16.dp)
             ) {
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = { query ->
-                        searchQuery = query
-                    },
-                    label = { Text("Zoek een locatie") },
-                    modifier = Modifier.weight(1f)
-                )
+                Column {
+                    Text(text = "${item.title}", style = MaterialTheme.typography.bodySmall)
+                    Text(text = "${item.description}", style = MaterialTheme.typography.bodyMedium)
 
-                Button(
-                    onClick = {
-                        scope.launch {
-                            val result = geocodeLocation(searchQuery.text)
-                            if (result != null) {
-                                mapCenter = GeoPoint(result.first, result.second)
-                                errorMessage = ""
-                            } else {
-                                errorMessage = "Locatie niet gevonden."
-                            }
-                        }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(onClick = {
+                        // Navigeer naar de detailpagina van het item
+                        navController.navigate("detail/${item.uid}")
+                    }) {
+                        Text("Bekijk details")
                     }
-                ) {
-                    Text("Zoek")
                 }
             }
+        }
 
-            // Foutmelding (indien van toepassing)
-            if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(bottom = 8.dp)
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                    shape = RoundedCornerShape(16.dp)
                 )
-            }
-
-            // Schuifregelaar voor straal
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Straal: ${searchRadius.toInt()} km", style = MaterialTheme.typography.bodyMedium)
-
+                .padding(16.dp)
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Slider(
-                    value = searchRadius,
-                    onValueChange = { newValue ->
-                        searchRadius = newValue
+                    value = range,
+                    onValueChange = { newRange ->
+                        range = if (newRange <= 5) {
+                            Math.round(newRange).toFloat()
+                        } else {
+                            5 + (Math.round((newRange - 5) / 5) * 5).toFloat()
+                        }
                     },
-                    valueRange = 5f..75f,
-                    steps = 13,
-                    modifier = Modifier.fillMaxWidth()
+                    valueRange = 1f..50f,
+                    steps = 48,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.secondary,
+                        activeTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+                        inactiveTrackColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
+                        activeTickColor = MaterialTheme.colorScheme.secondary,
+                        inactiveTickColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f)
+                    )
+                )
+                Text(
+                    text = "Bereik: ${range.toInt()} km",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(top = 8.dp)
                 )
             }
+        }
+
+        LaunchedEffect(Unit) {
+            userViewModel.refreshUserData()
+            itemViewModel.getAllItems()
         }
     }
 }
 
-// Geocoding functie
-suspend fun geocodeLocation(query: String): Pair<Double, Double>? {
-    return withContext(Dispatchers.IO) {
-        try {
-            val url =
-                "https://nominatim.openstreetmap.org/search?q=${query.replace(" ", "+")}&format=json&limit=1"
-            val response = URL(url).readText()
-            val jsonArray = JSONArray(response)
 
-            if (jsonArray.length() > 0) {
-                val jsonObject = jsonArray.getJSONObject(0)
-                val lat = jsonObject.getDouble("lat")
-                val lon = jsonObject.getDouble("lon")
-                Pair(lat, lon)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+    val earthRadius = 6371.0
+    val dLat = Math.toRadians(lat2 - lat1)
+    val dLon = Math.toRadians(lon2 - lon1)
+    val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return earthRadius * c
+}
+
+fun createCircle(center: GeoPoint, radiusInMeters: Double, pointsCount: Int = 64): Polygon {
+    val polygon = Polygon()
+    val points = mutableListOf<GeoPoint>()
+
+    val angleStep = 360.0 / pointsCount
+    for (i in 0 until pointsCount) {
+        val angle = Math.toRadians(i * angleStep)
+
+        // Omrekeningen van meters naar graden
+        val latAdjustment = radiusInMeters / 111320.0
+        val lonAdjustment = radiusInMeters / (40008000.0 / 360.0)
+
+        // Verander de locatie volgens de cirkel
+        val lat = center.latitude + latAdjustment * Math.cos(angle)
+        val lon = center.longitude + lonAdjustment * Math.sin(angle) / Math.cos(Math.toRadians(center.latitude))
+
+        points.add(GeoPoint(lat, lon))
+    }
+
+    polygon.points = points
+    polygon.fillColor = Color.argb(60, 0, 102, 138)
+    polygon.strokeColor = Color.BLUE
+    polygon.strokeWidth = 2f
+    return polygon
+}
+
+fun calculateZoomLevel(range: Float): Double {
+    return when {
+        range <= 1f -> 15.5
+        range <= 2f -> 14.6
+        range <= 3f -> 14.0
+        range <= 4f -> 13.6
+        range <= 5f -> 13.3
+        range <= 10f -> 12.3
+        range <= 15f -> 11.7
+        range <= 20f -> 11.3
+        range <= 25f -> 11.0
+        range <= 30f -> 10.7
+        range <= 35f -> 10.4
+        range <= 40f -> 10.2
+        range <= 45f -> 10.0
+        else -> 9.7
     }
 }
