@@ -12,5 +12,5 @@ data class User(
 
     val createdAt: Long = System.currentTimeMillis()
 ) {
-    constructor() : this("", "", "", null, null, GeoPoint(0.0, 0.0))
+    constructor() : this("", "", "", null, null, null)
 }
