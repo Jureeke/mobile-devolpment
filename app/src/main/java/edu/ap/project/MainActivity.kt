@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         composable("home") { HomeScreen(navController) }
                         composable("list") { ListScreen(navController = navController) }
                         composable("add") { AddScreen() }
-                        composable("map") { MapScreen() }
+                        composable("map") { MapScreen(navController = navController) }
                         composable("profile") { ProfileScreen()}
                         composable(
                             "detail/{itemId}",
