@@ -7,6 +7,7 @@ import com.google.firebase.firestore.PropertyName
 data class Item(
     val description: String = "",
     val endDate: Timestamp? = null,
+    val startDate: Timestamp? = null,
     val location: GeoPoint? = null,
     val owner: String = "", // Reference to user ID
     val photo: String = "",

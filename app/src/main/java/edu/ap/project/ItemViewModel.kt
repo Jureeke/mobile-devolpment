@@ -1,15 +1,16 @@
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import edu.ap.project.model.Item
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class ItemViewModel : ViewModel() {
 
@@ -39,6 +40,9 @@ class ItemViewModel : ViewModel() {
 
     private val _errorState = MutableLiveData<String?>()
     val errorState: LiveData<String?> get() = _errorState
+
+    private val _ownerName = MutableLiveData<String?>()
+    val ownerName: LiveData<String?> get() = _ownerName
 
     init {
         // Fetch the current user's UID based on email
@@ -86,6 +90,7 @@ class ItemViewModel : ViewModel() {
                 "description" to description,
                 "price" to parsedPrice,
                 "endDate" to null,
+                "startDate" to null,
                 "location" to location,
                 "owner" to "/users/$userUid",
                 "photo" to imageUrl,
@@ -105,6 +110,40 @@ class ItemViewModel : ViewModel() {
                 }
         } else {
             _itemAddedStatus.value = false
+        }
+    }
+
+    fun rentItem(itemId: String, start: Date, end: Date) {
+        try {
+            // Ophalen van het document
+            val documentRef = firestore.collection("items").document(itemId)
+
+            // Controleer of het item bestaat
+            documentRef.get()
+                .addOnSuccessListener { snapshot ->
+                    if (snapshot.exists()) {
+                        // Bijwerken van de velden
+                        documentRef.update(
+                            mapOf(
+                                "startDate" to Timestamp(start),
+                                "endDate" to Timestamp(end),
+                                "renter" to _currentUserUid.value // Gebruik de juiste waarde voor de huidige gebruiker
+                            ))
+                            .addOnSuccessListener {
+                                Log.d("ItemViewModel", "Item succesvol verhuurd!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("ItemViewModel", "Error bij het bijwerken van het item: ${e.message}", e)
+                            }
+                    } else {
+                        Log.e("ItemViewModel", "Item met ID $itemId bestaat niet.")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ItemViewModel", "Error bij het ophalen van item: ${e.message}", e)
+                }
+        } catch (e: Exception) {
+            Log.e("ItemViewModel", "Error bij het huren van item: ${e.message}", e)
         }
     }
 
@@ -168,10 +207,6 @@ class ItemViewModel : ViewModel() {
         }
     }
 
-
-    private val _ownerName = MutableLiveData<String?>()
-    val ownerName: LiveData<String?> get() = _ownerName
-
     fun fetchOwnerName(ownerUid: String) {
         var string = ownerUid.split('/')
         var id = string.get(2)
@@ -189,4 +224,3 @@ class ItemViewModel : ViewModel() {
         }
 
     }
-
