@@ -143,14 +143,16 @@ fun DetailScreen(
                                     )
                                 }
                             }
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            )  {
-                                Button(
-                                    onClick = { navController.navigate("rent/${currentItem.uid}") })
-                                {
-                                    Text("Huren")
+                            if (currentItem.endDate == null){
+                                Row(
+                                    modifier = Modifier.padding(16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                )  {
+                                    Button(
+                                        onClick = { navController.navigate("rent/${currentItem.uid}") })
+                                    {
+                                        Text("Huren")
+                                    }
                                 }
                             }
                         }
