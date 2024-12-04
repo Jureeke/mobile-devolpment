@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,6 +28,7 @@ import edu.ap.project.screens.DetailScreen
 import edu.ap.project.screens.HomeScreen
 import edu.ap.project.screens.ListScreen
 import edu.ap.project.screens.MapScreen
+import edu.ap.project.screens.RentScreen
 import edu.ap.project.theme.ProjectTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,6 +62,13 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
                             DetailScreen(itemId = itemId, navController = navController)
+                        }
+                        composable(
+                            "rent/{itemId}",
+                            arguments = listOf(navArgument("itemId") { nullable = false })
+                        ) { backStackEntry ->
+                            val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
+                            RentScreen(itemId = itemId)
                         }
 
                     }

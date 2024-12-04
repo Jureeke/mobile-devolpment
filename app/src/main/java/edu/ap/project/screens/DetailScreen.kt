@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -115,7 +117,8 @@ fun DetailScreen(
                                         .size(120.dp) // Stel de grootte van de afbeelding in
                                         .clip(RoundedCornerShape(8.dp))
                                 )
-                            } else {
+                            }
+                            else {
                                 Box(
                                     modifier = Modifier
                                         .size(120.dp)
@@ -131,7 +134,18 @@ fun DetailScreen(
                                     )
                                 }
                             }
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            )  {
+                                Button(
+                                    onClick = { navController.navigate("rent/${currentItem.uid}") })
+                                {
+                                    Text("Huren")
+                                }
+                            }
                         }
+
                     }
                 }
             }
