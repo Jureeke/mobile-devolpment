@@ -116,7 +116,7 @@ fun MapScreen(
                     .align(Alignment.TopCenter)
                     .padding(16.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
                         shape = RoundedCornerShape(16.dp)
                     )
                     .padding(16.dp)
