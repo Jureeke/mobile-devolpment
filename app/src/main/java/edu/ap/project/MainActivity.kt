@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -67,8 +68,9 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("itemId") { nullable = false })
                         ) { backStackEntry ->
                             val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
-                            RentScreen(itemId = itemId )
+                            RentScreen(itemId = itemId)
                         }
+
                     }
                 }
             }
