@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun DetailScreen(
@@ -49,6 +51,13 @@ fun DetailScreen(
     val currentItem = itemViewModel.currentItem.observeAsState().value
     val isLoading = itemViewModel.loadingState.observeAsState(false)
     val ownerName by itemViewModel.ownerName.observeAsState("Loading...")
+
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+    val formattedEndDate = currentItem?.endDate?.let {
+        dateFormat.format(it.toDate()) // Convert Timestamp to Date and format it
+    } ?: "Niet Verhuurd"
+
 
     // Trigger fetching the item when this composable is displayed
     LaunchedEffect(itemId) {
@@ -104,7 +113,7 @@ fun DetailScreen(
                             Text("Title: ${currentItem.title}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                             Text("Description: ${currentItem.description}")
                             Text("Price: €${currentItem.price}")
-                            Text("End Date: ${currentItem.endDate ?: "Niet Verhuurd"}")
+                            Text("End Date: $formattedEndDate")
                             Text("Location: ${currentItem.location?.latitude}, ${currentItem.location?.longitude}")
                             Text(text = "Owner: $ownerName")  // Display the owner name
                             Text("Type: ${currentItem.type}")
