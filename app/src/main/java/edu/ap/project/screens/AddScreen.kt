@@ -37,8 +37,6 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
     var selectedType by remember { mutableStateOf(ItemType.values().first().typeName) }
     var expanded by remember { mutableStateOf(false) }
 
-    val location = GeoPoint(0.0, 0.0)
-
     var errorMessage by remember { mutableStateOf("") }
 
     Column(
@@ -152,7 +150,7 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
                 } else {
                     errorMessage = ""
                     if (currentUserUid != null) {
-                        itemViewModel.addItem(title, description, price, imageUrl, location, selectedType)
+                        itemViewModel.addItem(title, description, price, imageUrl, selectedType)
                     }
                 }
             },

@@ -1,6 +1,7 @@
 package edu.ap.project.screens
 
 import ItemViewModel
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -156,6 +157,7 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel(), navController: NavCon
 
     LaunchedEffect(currentUserUid) {
         itemViewModel.getItemsForUser(currentUserUid)
+        Log.d("test", userItems.value.size.toString())
         itemViewModel.getAllItems()
     }
 

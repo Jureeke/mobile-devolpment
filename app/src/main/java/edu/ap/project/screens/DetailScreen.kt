@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -51,6 +51,7 @@ fun DetailScreen(
     val currentItem = itemViewModel.currentItem.observeAsState().value
     val isLoading = itemViewModel.loadingState.observeAsState(false)
     val ownerName by itemViewModel.ownerName.observeAsState("Loading...")
+    val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -110,11 +111,11 @@ fun DetailScreen(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text("${currentItem.title}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                            Text("${currentItem.description}")
+                            Text(currentItem.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                            Text(currentItem.description)
                             Text("Prijs: €${currentItem.price}")
                             Text("Eind datum: $formattedEndDate")
-                            Text("locatie: ${currentItem.location?.latitude}, ${currentItem.location?.longitude}")
+                            Text("locatie: ${currentItem.address}")
                             Text(text = "Eigennaar: $ownerName")  // Display the owner name
                             Text("Type: ${currentItem.type}")
                             if (!currentItem.photo.isNullOrEmpty()) {
@@ -123,7 +124,7 @@ fun DetailScreen(
                                     contentDescription = "Afbeelding van ${currentItem.title}",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        .size(120.dp) // Stel de grootte van de afbeelding in
+                                        .size(120.dp)
                                         .clip(RoundedCornerShape(8.dp))
                                 )
                             }
@@ -143,7 +144,8 @@ fun DetailScreen(
                                     )
                                 }
                             }
-                            if (currentItem.endDate == null){
+
+                            if (currentItem.renter == null && currentItem.owner != currentUserUid.toString()){
                                 Row(
                                     modifier = Modifier.padding(16.dp),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -152,6 +154,22 @@ fun DetailScreen(
                                         onClick = { navController.navigate("rent/${currentItem.uid}") })
                                     {
                                         Text("Huren")
+                                    }
+                                }
+                            }
+
+                            if(currentItem.owner == currentUserUid.toString() && currentItem.renter == null)
+                            {
+                                Row(
+                                    modifier = Modifier.padding(16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                )  {
+                                    Button(
+                                        onClick = {
+                                            itemViewModel.deleteItem(currentItem.uid)
+                                        })
+                                    {
+                                        Text("verwijder")
                                     }
                                 }
                             }

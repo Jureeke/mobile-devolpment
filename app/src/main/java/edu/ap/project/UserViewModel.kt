@@ -19,7 +19,6 @@ class UserViewModel : ViewModel() {
     private fun fetchUserData() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
-            // Use coroutine to fetch user data from Firestore
             viewModelScope.launch {
                 try {
                     val userId = currentUser.uid
