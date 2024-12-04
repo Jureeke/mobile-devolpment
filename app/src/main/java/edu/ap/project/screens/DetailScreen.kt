@@ -101,12 +101,12 @@ fun DetailScreen(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text("Title: ${currentItem.title}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                            Text("Description: ${currentItem.description}")
-                            Text("Price: €${currentItem.price}")
-                            Text("End Date: ${currentItem.endDate ?: "Niet Verhuurd"}")
-                            Text("Location: ${currentItem.location?.latitude}, ${currentItem.location?.longitude}")
-                            Text(text = "Owner: $ownerName")  // Display the owner name
+                            Text("${currentItem.title}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                            Text("${currentItem.description}")
+                            Text("Prijs: €${currentItem.price}")
+                            Text("Eind datum: ${currentItem.endDate ?: "Niet Verhuurd"}")
+                            Text("locatie: ${currentItem.location?.latitude}, ${currentItem.location?.longitude}")
+                            Text(text = "Eigennaar: $ownerName")  // Display the owner name
                             Text("Type: ${currentItem.type}")
                             if (!currentItem.photo.isNullOrEmpty()) {
                                 AsyncImage(
