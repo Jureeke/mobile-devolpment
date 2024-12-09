@@ -3,6 +3,7 @@ package edu.ap.project.screens
 import ItemViewModel
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,11 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,11 +31,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseAuth
 import edu.ap.project.model.Item
+import edu.ap.project.model.ItemType
 
 @Composable
 fun ItemBox(item: Item,navController: NavController) {
@@ -154,34 +153,73 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel(), navController: NavCon
     val userItems = itemViewModel.userItems.observeAsState(emptyList())
     val allItems = itemViewModel.allItems.observeAsState(emptyList())
     val isViewingUserItems = remember { mutableStateOf(false) }
-
-    LaunchedEffect(currentUserUid) {
-        itemViewModel.getItemsForUser(currentUserUid)
-        Log.d("test", userItems.value.size.toString())
-        itemViewModel.getAllItems()
-    }
+    var selectedType = remember { mutableStateOf<String?>(null) }
+    var expanded = remember { mutableStateOf(false)}
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Titel afhankelijk van de state
         Text(
             text = if (isViewingUserItems.value) "Mijn Items" else "Alle Items",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        Button(
-            onClick = { isViewingUserItems.value = !isViewingUserItems.value }, // Update state
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            Text(text = if (isViewingUserItems.value) "Toon alle Items" else "Mijn Items")
+        // Filter Row: Toggle button + Dropdown
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Button(
+                onClick = { isViewingUserItems.value = !isViewingUserItems.value },
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text(text = if (isViewingUserItems.value) "Toon alle Items" else "Mijn Items")
+            }
+
+            Box(modifier = Modifier.weight(1f)) {
+                OutlinedTextField(
+                    value = selectedType.value ?: "Alle Categorieën",
+                    onValueChange = {}, // Leeg omdat het readonly is
+                    readOnly = true,
+                    label = { Text("Categorie") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded.value = true }
+                )
+
+                DropdownMenu(
+                    expanded = expanded.value,
+                    onDismissRequest = { expanded.value = false },
+                    modifier = Modifier.zIndex(1f)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Alle Categorieën") },
+                        onClick = {
+                            selectedType.value = null // Geen filter
+                            expanded.value = false
+                        }
+                    )
+                    ItemType.values().forEach { type ->
+                        DropdownMenuItem(
+                            text = { Text(type.typeName) },
+                            onClick = {
+                                selectedType.value = type.typeName // Filter instellen
+                                expanded.value = false
+                            }
+                        )
+                    }
+                }
+            }
         }
 
+        // Filter items op basis van de geselecteerde filters
+        val itemsToShow = (if (isViewingUserItems.value) userItems.value else allItems.value)
+            .filter { item ->
+                selectedType.value == null || item.type == selectedType.value
+            }
 
-        val itemsToShow = if (isViewingUserItems.value) userItems.value else allItems.value
-
+        // Lijst met items
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -192,6 +230,5 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel(), navController: NavCon
         }
     }
 }
-
 
 
