@@ -156,6 +156,12 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel(), navController: NavCon
     var selectedType = remember { mutableStateOf<String?>(null) }
     var expanded = remember { mutableStateOf(false)}
 
+    LaunchedEffect(currentUserUid) {
+        itemViewModel.getItemsForUser(currentUserUid)
+        Log.d("test", userItems.value.size.toString())
+        itemViewModel.getAllItems()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
