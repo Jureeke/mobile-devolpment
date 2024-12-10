@@ -16,9 +16,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import edu.ap.project.model.ItemType
@@ -26,7 +32,6 @@ import edu.ap.project.model.ItemType
 @Composable
 fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
     val currentUserUid by itemViewModel.currentUserUid.observeAsState()
-
     val itemAddedStatus by itemViewModel.itemAddedStatus.observeAsState()
 
     var title by remember { mutableStateOf("") }
@@ -35,8 +40,9 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
     var imageUrl by remember { mutableStateOf("") }
     var selectedType by remember { mutableStateOf(ItemType.values().first().typeName) }
     var expanded by remember { mutableStateOf(false) }
-
     var errorMessage by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+    var isSuccess by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -103,28 +109,41 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
             )
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { expanded = !expanded }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
+                .clickable { expanded = !expanded }
+                .padding(16.dp)
         ) {
-            OutlinedTextField(
-                value = selectedType,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Type van het item") },
+            Text(
+                text = selectedType,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable { expanded = !expanded }
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .clickable { expanded = !expanded }
             )
 
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.zIndex(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .zIndex(1f)
             ) {
                 ItemType.values().forEach { type ->
                     DropdownMenuItem(
-                        text = { Text(type.typeName) },
+                        text = { Text(type.typeName, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
                             selectedType = type.typeName
                             expanded = false
@@ -133,6 +152,7 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
                 }
             }
         }
+
 
         if (errorMessage.isNotEmpty()) {
             Text(
@@ -150,6 +170,8 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
                     errorMessage = ""
                     if (currentUserUid != null) {
                         itemViewModel.addItem(title, description, price, imageUrl, selectedType)
+                        isSuccess = true // Simuleer succes voor demo
+                        showDialog = true
                     }
                 }
             },
@@ -158,15 +180,27 @@ fun AddScreen(itemViewModel: ItemViewModel = viewModel()) {
         ) {
             Text("Toevoegen", color = Color.White)
         }
+    }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        itemAddedStatus?.let { status ->
-            if (status) {
-                Text("Item succesvol toegevoegd!", color = Color.Green, modifier = Modifier.padding(top = 16.dp))
-            } else {
-                Text("Fout bij het toevoegen van het item. Probeer het opnieuw.", color = Color.Red, modifier = Modifier.padding(top = 16.dp))
-            }
-        }
+    // Pop-up
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("OK")
+                }
+            },
+            title = { Text(if (isSuccess) "Succes" else "Fout") },
+            text = {
+                Text(
+                    if (isSuccess) "✅ Item succesvol toegevoegd!" else "❌ Fout bij het toevoegen van het item. Probeer het opnieuw."
+                )
+            },
+            modifier = Modifier
+                .padding(16.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surface)
+        )
     }
 }

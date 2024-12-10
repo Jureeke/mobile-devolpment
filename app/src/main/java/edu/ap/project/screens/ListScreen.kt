@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -175,49 +176,72 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel(), navController: NavCon
         )
 
         // Filter Row: Toggle button + Dropdown
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp), // Ruimte tussen de items
+            verticalAlignment = Alignment.CenterVertically // Uitlijning op één lijn
+        ) {
+            // Knop
             Button(
                 onClick = { isViewingUserItems.value = !isViewingUserItems.value },
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.height(56.dp) // Zorgt ervoor dat de knop dezelfde hoogte heeft als de dropdown
             ) {
                 Text(text = if (isViewingUserItems.value) "Toon alle Items" else "Mijn Items")
             }
 
-            Box(modifier = Modifier.weight(1f)) {
-                OutlinedTextField(
-                    value = selectedType.value ?: "Alle Categorieën",
-                    onValueChange = {}, // Leeg omdat het readonly is
-                    readOnly = true,
-                    label = { Text("Categorie") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { expanded.value = true }
-                )
-
-                DropdownMenu(
-                    expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false },
-                    modifier = Modifier.zIndex(1f)
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Alle Categorieën") },
-                        onClick = {
-                            selectedType.value = null // Geen filter
-                            expanded.value = false
-                        }
+            // Dropdown
+            Box(
+                modifier = Modifier
+                    .weight(1f) // Laat de dropdown de resterende ruimte opvullen
+                    .height(56.dp) // Zelfde hoogte als de knop
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
                     )
-                    ItemType.values().forEach { type ->
-                        DropdownMenuItem(
-                            text = { Text(type.typeName) },
-                            onClick = {
-                                selectedType.value = type.typeName // Filter instellen
-                                expanded.value = false
-                            }
-                        )
-                    }
+                    .clickable { expanded.value = true }
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+                Text(
+                    text = selectedType.value ?: "Alle Categorieën",
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+            ) {
+                // Optie: Alle categorieën
+                DropdownMenuItem(
+                    onClick = {
+                        selectedType.value = null
+                        expanded.value = false
+                    },
+                    text = { Text("Alle Categorieën") }
+                )
+                Divider() // Scheiding tussen opties
+                // Dynamische opties gebaseerd op ItemType
+                ItemType.values().forEach { type ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedType.value = type.typeName
+                            expanded.value = false
+                        },
+                        text = { Text(type.typeName) }
+                    )
                 }
             }
         }
+
 
         // Filter items op basis van de geselecteerde filters
         val itemsToShow = (if (isViewingUserItems.value) userItems.value else allItems.value)
@@ -225,13 +249,29 @@ fun ListScreen(itemViewModel: ItemViewModel = viewModel(), navController: NavCon
                 selectedType.value == null || item.type == selectedType.value
             }
 
-        // Lijst met items
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(items = itemsToShow) { item ->
-                ItemBox(item = item, navController = navController)
+// Controleer of er items zijn
+        if (itemsToShow.isEmpty()) {
+            // Toon een bericht als er geen items zijn
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Geen items gevonden in deze categorie",
+                    style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                )
+            }
+        } else {
+            // Toon de lijst met items
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(items = itemsToShow) { item ->
+                    ItemBox(item = item, navController = navController)
+                }
             }
         }
     }

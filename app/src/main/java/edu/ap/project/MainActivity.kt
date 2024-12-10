@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("itemId") { nullable = false })
                         ) { backStackEntry ->
                             val itemId = backStackEntry.arguments?.getString("itemId") ?: ""
-                            RentScreen(itemId = itemId)
+                            RentScreen(itemId = itemId, navController = navController)
                         }
 
                     }

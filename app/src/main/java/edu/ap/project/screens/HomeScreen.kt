@@ -41,6 +41,7 @@ import edu.ap.project.model.Item
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.text.style.TextAlign
 
 
@@ -60,36 +61,48 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
+        // Titel
         Text(
-            text = "Gehuurde toestellen",
+            text = "Welkom bij Leasy",
             style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Text(
+            text = "Overzicht van je gehuurde toestellen:",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         if (rentedItems.value.isNotEmpty()) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
             ) {
-                items(items = rentedItems.value) { item ->
-                    ItemBox2(
-                        item = item,
-                        navController = navController
-                    )
+                items(rentedItems.value) { item ->
+                    ItemBox2(item = item, navController = navController)
                 }
             }
         } else {
-            Text(
-                text = "Geen gehuurde toestellen",
-                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+            Box(
                 modifier = Modifier.fillMaxSize(),
-                textAlign = TextAlign.Center
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Je hebt momenteel geen gehuurde toestellen.",
+                    style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
+
 
 
 @Composable
@@ -101,49 +114,46 @@ fun ItemBox2(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(16.dp),
+            .padding(horizontal = 8.dp)
+            .clip(RoundedCornerShape(16.dp)),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
         ) {
-            // Bovenste rij met afbeelding en tekst
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Afbeelding aan de linkerkant
                 if (!item.photo.isNullOrEmpty()) {
                     AsyncImage(
                         model = item.photo,
                         contentDescription = "Afbeelding van ${item.title}",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(100.dp)
+                            .size(80.dp)
                             .clip(RoundedCornerShape(8.dp))
                     )
                 } else {
                     Box(
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                            .size(80.dp)
                             .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Warning,
                             contentDescription = "Geen afbeelding",
-                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                            modifier = Modifier.size(48.dp)
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Tekst aan de rechterkant
                 Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
@@ -152,29 +162,25 @@ fun ItemBox2(
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "€${item.price} / per dag",
+                        text = "€${item.price} / dag",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = item.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                        maxLines = 3,
-                        modifier = Modifier.padding(end = 8.dp)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        maxLines = 2
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Onderste rij met type en knoppen
             Row(
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -184,35 +190,23 @@ fun ItemBox2(
                 )
 
                 Row {
-                    // Detail-knop
-                    IconButton(
-                        onClick = { navController.navigate("detail/${item.uid}") }
-                    ) {
+                    IconButton(onClick = { navController.navigate("detail/${item.uid}") }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowForward,
-                            contentDescription = "Naar detailpagina",
+                            contentDescription = "Bekijk details",
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
-
-                }
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    onClick = { itemViewModel.cancelRent(item.uid) },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    elevation = ButtonDefaults.elevatedButtonElevation()
-                ) {
-                    Text("Opzeggen")
+                    Button(
+                        onClick = { itemViewModel.cancelRent(item.uid) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.onError
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Opzeggen")
+                    }
                 }
             }
         }
