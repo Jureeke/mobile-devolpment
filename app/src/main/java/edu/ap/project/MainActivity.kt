@@ -98,7 +98,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.List, contentDescription = "List") },
-            label = { Text("List") },
+            label = { Text("Lijst") },
             selected = currentRoute == "List",
             onClick = {
                 navController.navigate("list") {
@@ -134,7 +134,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") },
-            label = { Text("Profile") },
+            label = { Text("Profiel") },
             selected = currentRoute == "profile",
             onClick = {
                 navController.navigate("profile") {
